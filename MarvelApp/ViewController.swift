@@ -62,14 +62,15 @@ final class ViewController: UIViewController {
 
         label.snp.makeConstraints { make in
             make.top.equalTo(logo.snp.bottom).inset(Layout.verticalInset)
-            make.centerX.equalTo(view.snp.centerX)
+            make.left.equalToSuperview().inset(Layout.horizontalTextInset)
+            make.right.equalToSuperview().inset(Layout.horizontalTextInset)
         }
 
         galleryCollectionView.snp.makeConstraints { make in
             make.top.equalTo(label.snp.bottom).inset(10)
-            make.left.equalTo(view.snp.left)
-            make.right.equalTo(view.snp.right)
-            make.bottom.equalTo(view.snp.bottom)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
 }
@@ -118,6 +119,7 @@ extension ViewController: UICollectionViewDataSource {
 extension ViewController {
     
     enum Layout {
+        static var horizontalTextInset: CGFloat { 65 }
         static var horizontalInset: CGFloat { 90 }
         static var verticalInset: CGFloat { 20 }
         static var leftDistanceToView: CGFloat { 5 }
