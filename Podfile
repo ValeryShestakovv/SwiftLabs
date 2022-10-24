@@ -5,8 +5,7 @@ target 'MarvelApp' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  pod 'SnapKit'
-  pod 'AnimatedCollectionViewLayout'
-  pod 'Alamofire'
+  pod 'SnapKit', '~> 5.6.0'
+  pod 'AnimatedCollectionViewLayout', '~> 1.1.0'
 
 end
