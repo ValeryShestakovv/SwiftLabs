@@ -45,27 +45,34 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
-        self.view.backgroundColor = UIColor(red: 0.16, green: 0.15, blue: 0.17, alpha: 0.9)
+        setupFigureLayout()
+        setupLogoLayout()
+        setupLabelLayout()
+        setupGalleryLayout()
+    }
+    
+    func setupFigureLayout(){
         view.addSubview(figure)
-        view.addSubview(logo)
-        view.addSubview(label)
-        view.addSubview(galleryCollectionView)
-
         figure.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
- 
+    }
+    func setupLogoLayout(){
+        view.addSubview(logo)
         logo.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(Layout.verticalInset)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
         }
-
+    }
+    func setupLabelLayout(){
+        view.addSubview(label)
         label.snp.makeConstraints { make in
             make.top.equalTo(logo.snp.top).inset(Layout.verticalInset)
-            make.left.equalToSuperview().inset(Layout.horizontalTextInset)
-            make.right.equalToSuperview().inset(Layout.horizontalTextInset)
+            make.left.right.equalToSuperview().inset(Layout.horizontalTextInset)
         }
-
+    }
+    func setupGalleryLayout(){
+        view.addSubview(galleryCollectionView)
         galleryCollectionView.snp.makeConstraints { make in
             make.top.equalTo(label.snp.bottom).inset(10)
             make.left.equalToSuperview()
