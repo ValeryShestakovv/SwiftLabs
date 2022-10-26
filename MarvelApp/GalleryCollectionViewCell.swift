@@ -1,4 +1,5 @@
 import Foundation
+import SnapKit
 import UIKit
 
 final class GalleryCollectionViewCell: UICollectionViewCell {
@@ -8,7 +9,6 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     let mainImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .red
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
         return imageView
@@ -17,7 +17,6 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         text.textColor = .white
-        text.translatesAutoresizingMaskIntoConstraints = false
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
         return text
     }()
@@ -25,17 +24,23 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        addSubview(mainImageView)
-        addSubview(textLable)
-        mainImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        mainImageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        mainImageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        mainImageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        textLable.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -40).isActive = true
-        textLable.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40).isActive = true
+        setupImageLayout()
+        setupTextLayout()
     }
-
+    
+    func setupImageLayout() {
+        addSubview(mainImageView)
+        mainImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    func setupTextLayout() {
+        addSubview(textLable)
+        textLable.snp.makeConstraints { make in
+            make.left.bottom.equalToSuperview().inset(40)
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

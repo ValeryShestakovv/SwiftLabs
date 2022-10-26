@@ -8,7 +8,6 @@ final class ViewController: UIViewController {
         let logo = UIImageView()
         logo.image = UIImage(named: "logo")
         logo.contentMode = .scaleAspectFit
-        logo.translatesAutoresizingMaskIntoConstraints = false
         return logo
     }()
     
@@ -17,7 +16,6 @@ final class ViewController: UIViewController {
         textMarvel.text = "Choose your hero"
         textMarvel.textColor = .white
         textMarvel.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
-        textMarvel.translatesAutoresizingMaskIntoConstraints = false
         return textMarvel
     }()
     
@@ -51,27 +49,27 @@ final class ViewController: UIViewController {
         setupGalleryLayout()
     }
     
-    func setupFigureLayout(){
+    func setupFigureLayout() {
         view.addSubview(figure)
         figure.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-    func setupLogoLayout(){
+    func setupLogoLayout() {
         view.addSubview(logo)
         logo.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(Layout.verticalInset)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
         }
     }
-    func setupLabelLayout(){
+    func setupLabelLayout() {
         view.addSubview(label)
         label.snp.makeConstraints { make in
             make.top.equalTo(logo.snp.top).inset(Layout.verticalInset)
             make.left.right.equalToSuperview().inset(Layout.horizontalTextInset)
         }
     }
-    func setupGalleryLayout(){
+    func setupGalleryLayout() {
         view.addSubview(galleryCollectionView)
         galleryCollectionView.snp.makeConstraints { make in
             make.top.equalTo(label.snp.bottom).inset(10)
