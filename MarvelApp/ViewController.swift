@@ -60,6 +60,7 @@ final class ViewController: UIViewController {
         logo.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(Layout.verticalInset)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
+            make.height.equalTo(50)
         }
     }
     func setupLabelLayout() {
