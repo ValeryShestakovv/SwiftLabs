@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "ironman.jpeg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "ironman@2x.jpeg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "ironman@3x.jpeg",
       "idiom" : "universal",
       "scale" : "3x"
     }
