@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
 
-class GalleryCollectionViewCell: UICollectionViewCell {
+final class GalleryCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "GalleryCollectionViewCell"
     
-    public let mainImageView: UIImageView = {
+    let mainImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .red
         imageView.translatesAutoresizingMaskIntoConstraints = false
