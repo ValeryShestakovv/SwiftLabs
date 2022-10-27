@@ -1,4 +1,5 @@
 import SnapKit
+import Kingfisher
 import UIKit
 import AnimatedCollectionViewLayout
 
@@ -112,11 +113,29 @@ extension ViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GalleryCollectionViewCell.reuseId, for: indexPath) as? GalleryCollectionViewCell else {
             return .init()
         }
+        
         let item = items[indexPath.row]
-        cell.mainImageView.image = item.image
+        guard let downloadURL = URL(string: item.image) else { return .init()}
+        let resource = ImageResource(downloadURL: downloadURL)
+        let placeholder = UIImage(named: "placeholder")
+        
+        cell.mainImageView.kf.setImage(with: resource, placeholder: placeholder)
         cell.textLable.text = item.name
         cell.color = item.color
+        
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let detailViewController = DetailViewController()
+        guard let cell = galleryCollectionView.cellForItem(at: indexPath) as? GalleryCollectionViewCell else {
+            return
+        }
+
+        detailViewController.imageHero.image = cell.mainImageView.image
+        detailViewController.nameHero.text = cell.textLable.text
+        navigationController?.pushViewController(detailViewController, animated: true)
+
     }
 }
 

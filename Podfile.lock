@@ -1,20 +1,28 @@
 PODS:
   - AnimatedCollectionViewLayout (1.1.0)
+  - Kingfisher (7.4.1)
   - SnapKit (5.6.0)
+  - SwiftLint (0.49.1)
 
 DEPENDENCIES:
   - AnimatedCollectionViewLayout (~> 1.1.0)
+  - Kingfisher (~> 7.0)
   - SnapKit (~> 5.6.0)
+  - SwiftLint
 
 SPEC REPOS:
   trunk:
     - AnimatedCollectionViewLayout
+    - Kingfisher
     - SnapKit
+    - SwiftLint
 
 SPEC CHECKSUMS:
   AnimatedCollectionViewLayout: 0c1a38c4be115c525c887be183fc91ef65737c5d
+  Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  SwiftLint: 32ee33ded0636d0905ef6911b2b67bbaeeedafa5
 
-PODFILE CHECKSUM: 4d2f80155f46520d120dd80ef5331c71fde3b7dc
+PODFILE CHECKSUM: 556c64a2969be1ee6e889872674f00c2c9d26fcd
 
 COCOAPODS: 1.11.3
