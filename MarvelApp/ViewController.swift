@@ -122,7 +122,6 @@ extension ViewController: UICollectionViewDataSource {
         cell.mainImageView.kf.setImage(with: resource, placeholder: placeholder)
         cell.textLable.text = item.name
         cell.color = item.color
-        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -131,11 +130,12 @@ extension ViewController: UICollectionViewDataSource {
         guard let cell = galleryCollectionView.cellForItem(at: indexPath) as? GalleryCollectionViewCell else {
             return
         }
-
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = .white
         detailViewController.imageHero.image = cell.mainImageView.image
         detailViewController.nameHero.text = cell.textLable.text
+        detailViewController.detailHero.text = items[indexPath.row].discription
         navigationController?.pushViewController(detailViewController, animated: true)
-
     }
 }
 

@@ -1,11 +1,11 @@
 import UIKit
+import SnapKit
 
 class DetailViewController: UIViewController {
     
     public let imageHero: UIImageView = {
         let logo = UIImageView()
         logo.contentMode = .scaleToFill
-        logo.translatesAutoresizingMaskIntoConstraints = false
         return logo
     }()
     
@@ -21,26 +21,44 @@ class DetailViewController: UIViewController {
         text.textColor = .white
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
         text.translatesAutoresizingMaskIntoConstraints = false
+        text.numberOfLines = 0
         return text
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(imageHero)
-        view.addSubview(nameHero)
-        view.addSubview(detailHero)
-        
-        imageHero.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        imageHero.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        imageHero.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        imageHero.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        nameHero.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
-        nameHero.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
-        detailHero.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
-        detailHero.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
-        detailHero.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
-
+        setupImageLayout()
+        setupNameLayout()
+        setupDetailLayout()
     }
     
+    func setupImageLayout() {
+        view.addSubview(imageHero)
+        imageHero.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    func setupNameLayout() {
+        view.addSubview(nameHero)
+        nameHero.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(Layout.horizontalInset)
+            make.bottom.equalToSuperview().inset(Layout.verticalInset)
+        }
+    }
+    func setupDetailLayout() {
+        view.addSubview(detailHero)
+        detailHero.snp.makeConstraints { make in
+            make.top.equalTo(nameHero.snp.top).inset(Layout.verticalInset)
+            make.left.right.equalToSuperview().inset(Layout.horizontalInset)
+            make.bottom.equalToSuperview().inset(Layout.horizontalInset)
+        }
+    }
+}
+
+extension DetailViewController {
+    
+    enum Layout {
+        static var horizontalInset: CGFloat { 50 }
+        static var verticalInset: CGFloat { 100 }
+    }
 }
