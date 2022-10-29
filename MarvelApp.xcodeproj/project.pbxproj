@@ -117,11 +117,11 @@
 				637CE13C28F2FB7A00CDD3B9 /* ViewController.swift */,
 				63C1E330290A942200F4AAF4 /* DetailViewController.swift */,
 				63A1D74228F467AE00FA6696 /* GalleryCollectionViewCell.swift */,
+				63B7FD1728F457C700092C40 /* HeroModel.swift */,
+				63A1D74B28F56E6F00FA6696 /* TriangleView.swift */,
 				637CE14128F2FB7D00CDD3B9 /* Assets.xcassets */,
 				637CE14328F2FB7D00CDD3B9 /* LaunchScreen.storyboard */,
 				637CE14628F2FB7D00CDD3B9 /* Info.plist */,
-				63B7FD1728F457C700092C40 /* HeroModel.swift */,
-				63A1D74B28F56E6F00FA6696 /* TriangleView.swift */,
 			);
 			path = MarvelApp;
 			sourceTree = "<group>";
@@ -143,6 +143,7 @@
 			buildConfigurationList = 637CE15F28F2FB7D00CDD3B9 /* Build configuration list for PBXNativeTarget "MarvelApp" */;
 			buildPhases = (
 				C89776402EA58C3D69B33D96 /* [CP] Check Pods Manifest.lock */,
+				63C1E334290B97F200F4AAF4 /* Swiftlint */,
 				637CE13128F2FB7A00CDD3B9 /* Sources */,
 				637CE13228F2FB7A00CDD3B9 /* Frameworks */,
 				637CE13328F2FB7A00CDD3B9 /* Resources */,
@@ -263,6 +264,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		63C1E334290B97F200F4AAF4 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SwiftLintPath=\"${PROJECT_DIR}/Pods/SwiftLint/\"\necho $SwiftLintPath\n${SwiftLintPath}/swiftlint\n";
+		};
 		A403B9F5589F59481BD13AB7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
