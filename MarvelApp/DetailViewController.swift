@@ -8,31 +8,48 @@ final class DetailViewController: UIViewController {
         logo.contentMode = .scaleToFill
         return logo
     }()
+    let backButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Back", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
     let nameLable: UILabel = {
         let text = UILabel()
         text.textColor = .white
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
-        text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
     let detailLable: UILabel = {
         let text = UILabel()
         text.textColor = .white
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
-        text.translatesAutoresizingMaskIntoConstraints = false
         text.numberOfLines = 0
         return text
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageLayout()
+        setupButtonLayout()
+        backButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
         setupNameLayout()
         setupDetailLayout()
+    }
+    @objc func onButtonTap() {
+        self.dismiss(animated: true)
+        
     }
     private func setupImageLayout() {
         view.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+    private func setupButtonLayout() {
+        view.addSubview(backButton)
+        backButton.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(40)
+            make.left.equalToSuperview().offset(20)
         }
     }
     private func setupNameLayout() {

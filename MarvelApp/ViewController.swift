@@ -4,7 +4,6 @@ import UIKit
 import AnimatedCollectionViewLayout
 
 final class ViewController: UIViewController {
-
     private let logoView: UIImageView = {
         let logo = UIImageView()
         logo.image = UIImage(named: "logo")
@@ -119,18 +118,44 @@ extension ViewController: UICollectionViewDataSource {
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Назад",
-                                                                style: .plain,
-                                                                target: nil,
-                                                                action: nil)
-        self.navigationItem.backBarButtonItem?.tintColor = .white
         let item = items[indexPath.row]
         let resource = ImageResource(downloadURL: item.imageURL)
         let placeholder = UIImage(named: "placeholder")
         detailViewController.imageView.kf.setImage(with: resource, placeholder: placeholder)
         detailViewController.nameLable.text = item.name
         detailViewController.detailLable.text = item.discription
-        navigationController?.pushViewController(detailViewController, animated: true)
+        detailViewController.transitioningDelegate = self
+        detailViewController.modalPresentationStyle = .custom
+        present(detailViewController, animated: true)
+    }
+}
+extension ViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController,
+                             presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard
+            let selectedIndexPathCell = galleryCollectionView.indexPathsForSelectedItems,
+            let selectedCell = galleryCollectionView.cellForItem(at: (selectedIndexPathCell.first)!) as?
+                GalleryCollectionViewCell,
+            let selectedCellSuperview = selectedCell.superview
+        else {
+            return nil
+        }
+        let originFrame = selectedCellSuperview.convert(selectedCell.frame, to: nil)
+        return AnimationController(animationDuration: 0.5, animationType: .present, cellFrame: originFrame)
+    }
+    func animationController(forDismissed
+                             dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard
+            let selectedIndexPathCell = galleryCollectionView.indexPathsForSelectedItems,
+            let selectedCell = galleryCollectionView.cellForItem(at: (selectedIndexPathCell.first)!) as?
+                GalleryCollectionViewCell,
+            let selectedCellSuperview = selectedCell.superview
+        else {
+            return nil
+        }
+        let originFrame = selectedCellSuperview.convert(selectedCell.frame, to: nil)
+        return AnimationController(animationDuration: 0.5, animationType: .dismiss, cellFrame: originFrame)
     }
 }
 
