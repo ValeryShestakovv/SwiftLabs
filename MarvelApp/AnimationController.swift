@@ -32,17 +32,24 @@ extension AnimationController: UIViewControllerAnimatedTransitioning {
             let yScaleFactor = cellFrame.height / toViewController.view.frame.height
             let scaleTransform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
             let center = CGPoint(x: toViewController.view.frame.midX, y: toViewController.view.frame.midY)
-            presentAnimation(with: transitionContext, viewToAnimate: toViewController.view, scale: scaleTransform, center: center)
+            presentAnimation(with: transitionContext,
+                             viewToAnimate: toViewController.view,
+                             scale: scaleTransform,
+                             center: center)
         case .dismiss:
             transitionContext.containerView.addSubview(fromViewConroller.view)
             let xScaleFactor = cellFrame.width / fromViewConroller.view.frame.width
             let yScaleFactor = cellFrame.height / fromViewConroller.view.frame.height
             let scaleTransform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
             let center = CGPoint(x: cellFrame.midX, y: cellFrame.midY)
-            dismissAnimation(with: transitionContext, viewToAnimate: fromViewConroller.view, scale: scaleTransform, center: center)
+            dismissAnimation(with: transitionContext,
+                             viewToAnimate: fromViewConroller.view,
+                             scale: scaleTransform,
+                             center: center)
         }
     }
-    func presentAnimation(with transitionContext: UIViewControllerContextTransitioning, viewToAnimate: UIView, scale: CGAffineTransform, center: CGPoint) {
+    func presentAnimation(with transitionContext: UIViewControllerContextTransitioning,
+                          viewToAnimate: UIView, scale: CGAffineTransform, center: CGPoint) {
         viewToAnimate.transform = scale
         viewToAnimate.center = CGPoint(
           x: cellFrame.midX,
@@ -50,7 +57,11 @@ extension AnimationController: UIViewControllerAnimatedTransitioning {
         viewToAnimate.layer.cornerRadius = 20
         viewToAnimate.clipsToBounds = true
         let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut) {
+        UIView.animate(withDuration: duration,
+                       delay: 0,
+                       usingSpringWithDamping: 0.8,
+                       initialSpringVelocity: 0.8,
+                       options: .curveEaseOut) {
             viewToAnimate.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             viewToAnimate.center = center
             viewToAnimate.layer.cornerRadius = 0
@@ -59,12 +70,17 @@ extension AnimationController: UIViewControllerAnimatedTransitioning {
         }
 
     }
-    func dismissAnimation(with transitionContext: UIViewControllerContextTransitioning, viewToAnimate: UIView, scale: CGAffineTransform, center: CGPoint) {
+    func dismissAnimation(with transitionContext: UIViewControllerContextTransitioning,
+                          viewToAnimate: UIView, scale: CGAffineTransform, center: CGPoint) {
         viewToAnimate.layer.cornerRadius = 0
         viewToAnimate.clipsToBounds = true
         viewToAnimate.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: .curveEaseIn) {
+        UIView.animate(withDuration: duration,
+                       delay: 0,
+                       usingSpringWithDamping: 0.8,
+                       initialSpringVelocity: 0.1,
+                       options: .curveEaseIn) {
             viewToAnimate.transform = scale
             viewToAnimate.center = center
             viewToAnimate.layer.cornerRadius = 20
