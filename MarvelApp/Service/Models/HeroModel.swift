@@ -2,25 +2,24 @@ import Foundation
 import UIKit
 
 struct HeroModel {
-    let imageURL: URL
-    let name: String
-    let color: UIColor
-    let discription: String
-    static func fetchHero() -> [HeroModel] {
-        let firstItem = HeroModel(imageURL: ImageUrlHero.ironman!,
-                                  name: "Iron Man",
-                                  color: ColorHero.ironman,
-                                  discription: "I'm Iron Man! This is may discription!")
-        let secondItem = HeroModel(imageURL: ImageUrlHero.thor!,
-                                   name: "Thor",
-                                   color: ColorHero.thor,
-                                   discription: "I'm God of Thunder! This is may discription!")
-        let threeItem = HeroModel(imageURL: ImageUrlHero.halk!,
-                                  name: "Halk",
-                                  color: ColorHero.halk,
-                                  discription: "I'm Hulk! Crush! Crush! Crush!")
-        return [firstItem,secondItem,threeItem]
-    }
+    var image: String
+    var name: String
+    var details: String
+//    static func fetchHero() -> [HeroModel] {
+//        let firstItem = HeroModel(imageURL: ImageUrlHero.ironman!,
+//                                  name: "Iron Man",
+//                                  color: ColorHero.ironman,
+//                                  discription: "I'm Iron Man! This is may discription!")
+//        let secondItem = HeroModel(imageURL: ImageUrlHero.thor!,
+//                                   name: "Thor",
+//                                   color: ColorHero.thor,
+//                                   discription: "I'm God of Thunder! This is may discription!")
+//        let threeItem = HeroModel(imageURL: ImageUrlHero.halk!,
+//                                  name: "Halk",
+//                                  color: ColorHero.halk,
+//                                  discription: "I'm Hulk! Crush! Crush! Crush!")
+//        return [firstItem,secondItem,threeItem]
+//    }
 }
 
 struct ColorHero {

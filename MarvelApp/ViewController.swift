@@ -2,6 +2,7 @@ import SnapKit
 import Kingfisher
 import UIKit
 import AnimatedCollectionViewLayout
+import UIImageColors
 
 final class ViewController: UIViewController {
     private let logoView: UIImageView = {
@@ -36,11 +37,18 @@ final class ViewController: UIViewController {
         collectionView.dataSource = self
         return collectionView
     }()
-    private var items: [HeroModel] = HeroModel.fetchHero()
+    private var items: [HeroModel] = []
+    let service = ServiceImp()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
+        service.getHeroes {[weak self] result in
+            self?.items = result
+            DispatchQueue.main.async {
+                self?.galleryCollectionView.reloadData()
+            }
+        }
         setupFigureLayout()
         setupLogoLayout()
         setupLabelLayout()
@@ -87,10 +95,15 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         }
         let centerPoint = CGPoint(x: scrollView.frame.size.width / 2 + scrollView.contentOffset.x,
                                   y: scrollView.frame.size.height / 2 + scrollView.contentOffset.y)
-        if let indexPath = galleryCollectionView.indexPathForItem(at: centerPoint) {
-            let item = items[indexPath.row]
-            figure.backgroundColor = item.color
-        }
+        guard
+            let indexPath = galleryCollectionView.indexPathForItem(at: centerPoint),
+            let cell = galleryCollectionView.dequeueReusableCell(
+                withReuseIdentifier: GalleryCollectionViewCell.reuseId,
+                for: indexPath) as? GalleryCollectionViewCell,
+            let color = cell.imageView.image?.averageColor else {
+                return
+            }
+        figure.backgroundColor = color
     }
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -110,7 +123,7 @@ extension ViewController: UICollectionViewDataSource {
             withReuseIdentifier: GalleryCollectionViewCell.reuseId,
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
         let item = items[indexPath.row]
-        let resource = ImageResource(downloadURL: item.imageURL)
+        let resource = ImageResource(downloadURL: URL(string: item.image)!)
         let placeholder = UIImage(named: "placeholder")
         cell.imageView.kf.setImage(with: resource, placeholder: placeholder)
         cell.textLable.text = item.name
@@ -119,11 +132,11 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
         let item = items[indexPath.row]
-        let resource = ImageResource(downloadURL: item.imageURL)
+        let resource = ImageResource(downloadURL: URL(string: item.image)!)
         let placeholder = UIImage(named: "placeholder")
         detailViewController.imageView.kf.setImage(with: resource, placeholder: placeholder)
         detailViewController.nameLable.text = item.name
-        detailViewController.detailLable.text = item.discription
+        detailViewController.detailLable.text = item.details
         detailViewController.transitioningDelegate = self
         detailViewController.modalPresentationStyle = .custom
         present(detailViewController, animated: true)
@@ -166,9 +179,9 @@ extension ViewController {
         static var horizontalTextInset: CGFloat { 65 }
         static var horizontalInset: CGFloat { 90 }
         static var verticalInset: CGFloat { 80 }
-        static var leftDistanceToView: CGFloat { 5 }
+        static var leftDistanceToView: CGFloat { 0 }
         static var rightDistanceToView: CGFloat { 0 }
-        static var galleryMinimumLineSpacing: CGFloat { 25 }
+        static var galleryMinimumLineSpacing: CGFloat { 0 }
         static let galleryItemWidth = (UIScreen.main.bounds.width - Layout.leftDistanceToView -
                                        Layout.rightDistanceToView - (Layout.galleryMinimumLineSpacing / 2))
         static let galleryItemHeight = UIScreen.main.bounds.height - 150

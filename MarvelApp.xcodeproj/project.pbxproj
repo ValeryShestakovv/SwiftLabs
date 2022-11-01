@@ -17,6 +17,11 @@
 		63B7FD1828F457C700092C40 /* HeroModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B7FD1728F457C700092C40 /* HeroModel.swift */; };
 		63C1E331290A942200F4AAF4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C1E330290A942200F4AAF4 /* DetailViewController.swift */; };
 		63D7D073290FCE2000FE0888 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D072290FCE2000FE0888 /* AnimationController.swift */; };
+		63D7D07A29113DA600FE0888 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D07929113DA600FE0888 /* Service.swift */; };
+		63D7D07D2911481600FE0888 /* ServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D07C2911481600FE0888 /* ServiceProtocol.swift */; };
+		63D7D0832911A34600FE0888 /* Date + Timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D0822911A34600FE0888 /* Date + Timestamp.swift */; };
+		63D7D0872911A37700FE0888 /* String + MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D0862911A37700FE0888 /* String + MD5.swift */; };
+		63D7D08A2911A3A100FE0888 /* UIImage + Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D0892911A3A100FE0888 /* UIImage + Color.swift */; };
 		B87D9C1C271B1EE195CC1BD5 /* Pods_MarvelApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 263602935E579D64B571C33A /* Pods_MarvelApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +58,11 @@
 		63B7FD1728F457C700092C40 /* HeroModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroModel.swift; sourceTree = "<group>"; };
 		63C1E330290A942200F4AAF4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		63D7D072290FCE2000FE0888 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
+		63D7D07929113DA600FE0888 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		63D7D07C2911481600FE0888 /* ServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProtocol.swift; sourceTree = "<group>"; };
+		63D7D0822911A34600FE0888 /* Date + Timestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Timestamp.swift"; sourceTree = "<group>"; };
+		63D7D0862911A37700FE0888 /* String + MD5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + MD5.swift"; sourceTree = "<group>"; };
+		63D7D0892911A3A100FE0888 /* UIImage + Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage + Color.swift"; sourceTree = "<group>"; };
 		6738E58F4749604CBBFC45F8 /* Pods-MarvelApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelApp.release.xcconfig"; path = "Target Support Files/Pods-MarvelApp/Pods-MarvelApp.release.xcconfig"; sourceTree = "<group>"; };
 		7F4FE13868CE27E97B529DF1 /* Pods-MarvelApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelApp.debug.xcconfig"; path = "Target Support Files/Pods-MarvelApp/Pods-MarvelApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,12 +124,11 @@
 		637CE13728F2FB7A00CDD3B9 /* MarvelApp */ = {
 			isa = PBXGroup;
 			children = (
-				637CE13828F2FB7A00CDD3B9 /* AppDelegate.swift */,
-				637CE13A28F2FB7A00CDD3B9 /* SceneDelegate.swift */,
+				63D7D07E2911487E00FE0888 /* App */,
+				63D7D07729113D4100FE0888 /* Service */,
 				637CE13C28F2FB7A00CDD3B9 /* ViewController.swift */,
 				63C1E330290A942200F4AAF4 /* DetailViewController.swift */,
 				63A1D74228F467AE00FA6696 /* GalleryCollectionViewCell.swift */,
-				63B7FD1728F457C700092C40 /* HeroModel.swift */,
 				63A1D74B28F56E6F00FA6696 /* TriangleView.swift */,
 				637CE14128F2FB7D00CDD3B9 /* Assets.xcassets */,
 				637CE14328F2FB7D00CDD3B9 /* LaunchScreen.storyboard */,
@@ -127,6 +136,52 @@
 				63D7D072290FCE2000FE0888 /* AnimationController.swift */,
 			);
 			path = MarvelApp;
+			sourceTree = "<group>";
+		};
+		63D7D07729113D4100FE0888 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				63D7D07929113DA600FE0888 /* Service.swift */,
+				63D7D07B2911480000FE0888 /* Protocols */,
+				63D7D07829113D4F00FE0888 /* Models */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		63D7D07829113D4F00FE0888 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				63B7FD1728F457C700092C40 /* HeroModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		63D7D07B2911480000FE0888 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				63D7D07C2911481600FE0888 /* ServiceProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		63D7D07E2911487E00FE0888 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				637CE13A28F2FB7A00CDD3B9 /* SceneDelegate.swift */,
+				637CE13828F2FB7A00CDD3B9 /* AppDelegate.swift */,
+				63D7D07F2911489300FE0888 /* Extensions */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		63D7D07F2911489300FE0888 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				63D7D0822911A34600FE0888 /* Date + Timestamp.swift */,
+				63D7D0862911A37700FE0888 /* String + MD5.swift */,
+				63D7D0892911A3A100FE0888 /* UIImage + Color.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		ABC99B509D2C9F923D746F6C /* Pods */ = {
@@ -337,9 +392,14 @@
 				637CE13D28F2FB7A00CDD3B9 /* ViewController.swift in Sources */,
 				63A1D74328F467AE00FA6696 /* GalleryCollectionViewCell.swift in Sources */,
 				63B7FD1828F457C700092C40 /* HeroModel.swift in Sources */,
+				63D7D07A29113DA600FE0888 /* Service.swift in Sources */,
+				63D7D0832911A34600FE0888 /* Date + Timestamp.swift in Sources */,
+				63D7D08A2911A3A100FE0888 /* UIImage + Color.swift in Sources */,
+				63D7D0872911A37700FE0888 /* String + MD5.swift in Sources */,
 				637CE13928F2FB7A00CDD3B9 /* AppDelegate.swift in Sources */,
 				637CE13B28F2FB7A00CDD3B9 /* SceneDelegate.swift in Sources */,
 				63C1E331290A942200F4AAF4 /* DetailViewController.swift in Sources */,
+				63D7D07D2911481600FE0888 /* ServiceProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
