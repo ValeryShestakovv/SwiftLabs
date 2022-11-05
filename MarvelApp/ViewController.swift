@@ -37,14 +37,14 @@ final class ViewController: UIViewController {
         collectionView.dataSource = self
         return collectionView
     }()
-    private var items: [HeroModel] = []
+    private var heroesId: [Int] = []
     let service = ServiceImp()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
-        service.getHeroes {[weak self] result in
-            self?.items = result
+        service.getIdHeroes {[weak self] result in
+            self?.heroesId = result
             DispatchQueue.main.async {
                 self?.galleryCollectionView.reloadData()
             }
@@ -88,7 +88,6 @@ final class ViewController: UIViewController {
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView is UICollectionView else {
             return
@@ -110,38 +109,34 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: Layout.galleryItemWidth, height: Layout.galleryItemHeight)
     }
-
 }
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+        return heroesId.count
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.reuseId,
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
-        let item = items[indexPath.row]
-        let resource = ImageResource(downloadURL: URL(string: item.image)!)
-        let placeholder = UIImage(named: "placeholder")
-        cell.imageView.kf.setImage(with: resource, placeholder: placeholder)
-        cell.textLable.text = item.name
+        let heroId = heroesId[indexPath.row]
+        cell.compose(heroId: heroId)
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = galleryCollectionView.cellForItem(at: indexPath)
+                as? GalleryCollectionViewCell else { return }
         let detailViewController = DetailViewController()
-        let item = items[indexPath.row]
-        let resource = ImageResource(downloadURL: URL(string: item.image)!)
-        let placeholder = UIImage(named: "placeholder")
-        detailViewController.imageView.kf.setImage(with: resource, placeholder: placeholder)
-        detailViewController.nameLable.text = item.name
-        detailViewController.detailLable.text = item.details
+        detailViewController.imageView.image = cell.imageView.image
+        let heroId = heroesId[indexPath.row]
+        detailViewController.compose(heroId: heroId)
         detailViewController.transitioningDelegate = self
         detailViewController.modalPresentationStyle = .custom
         present(detailViewController, animated: true)
     }
 }
+
 extension ViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,

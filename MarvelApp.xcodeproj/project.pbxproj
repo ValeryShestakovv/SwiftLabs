@@ -130,10 +130,10 @@
 				63C1E330290A942200F4AAF4 /* DetailViewController.swift */,
 				63A1D74228F467AE00FA6696 /* GalleryCollectionViewCell.swift */,
 				63A1D74B28F56E6F00FA6696 /* TriangleView.swift */,
+				63D7D072290FCE2000FE0888 /* AnimationController.swift */,
 				637CE14128F2FB7D00CDD3B9 /* Assets.xcassets */,
 				637CE14328F2FB7D00CDD3B9 /* LaunchScreen.storyboard */,
 				637CE14628F2FB7D00CDD3B9 /* Info.plist */,
-				63D7D072290FCE2000FE0888 /* AnimationController.swift */,
 			);
 			path = MarvelApp;
 			sourceTree = "<group>";

@@ -1,18 +1,19 @@
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class DetailViewController: UIViewController {
-
-    let imageView: UIImageView = {
-        let logo = UIImageView()
-        logo.contentMode = .scaleToFill
-        return logo
-    }()
+    
     let backButton: UIButton = {
         let button = UIButton()
         button.setTitle("Back", for: .normal)
         button.setTitleColor(.white, for: .normal)
         return button
+    }()
+    let imageView: UIImageView = {
+        let logo = UIImageView()
+        logo.contentMode = .scaleToFill
+        return logo
     }()
     let nameLable: UILabel = {
         let text = UILabel()
@@ -67,7 +68,20 @@ final class DetailViewController: UIViewController {
             make.bottom.equalToSuperview().inset(Layout.horizontalInset)
         }
     }
+    func compose(heroId: Int) {
+        ServiceImp().getHero(idHero: heroId) { result in
+            DispatchQueue.main.async {
+//                let resource = ImageResource(downloadURL: URL(string: result.image)!)
+//                let placeholder = UIImage(named: "placeholder")
+//                self.imageView.kf.setImage(with: resource, placeholder: placeholder)
+                self.nameLable.text = result.name
+                self.detailLable.text = result.details
+            }
+        }
+    }
 }
+
+// MARK: Layout Guides
 
 extension DetailViewController {
     enum Layout {

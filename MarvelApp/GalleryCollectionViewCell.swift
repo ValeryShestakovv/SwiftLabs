@@ -1,6 +1,7 @@
 import Foundation
 import SnapKit
 import UIKit
+import Kingfisher
 
 final class GalleryCollectionViewCell: UICollectionViewCell {
     static let reuseId = "GalleryCollectionViewCell"
@@ -11,7 +12,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         imageView.layer.masksToBounds = true
         return imageView
     }()
-    let textLable: UILabel = {
+    let nameLable: UILabel = {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         text.textColor = .white
@@ -30,12 +31,22 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         }
     }
     func setupTextLayout() {
-        addSubview(textLable)
-        textLable.snp.makeConstraints { make in
-            make.left.bottom.equalToSuperview().inset(40)
+        addSubview(nameLable)
+        nameLable.snp.makeConstraints { make in
+            make.left.right.bottom.equalToSuperview().inset(40)
         }
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    func compose(heroId: Int) {
+        ServiceImp().getHero(idHero: heroId) { result in
+            DispatchQueue.main.async {
+                let resource = ImageResource(downloadURL: URL(string: result.image)!)
+                let placeholder = UIImage(named: "placeholder")
+                self.imageView.kf.setImage(with: resource, placeholder: placeholder)
+                self.nameLable.text = result.name
+            }
+        }
     }
 }
