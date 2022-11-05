@@ -3,7 +3,6 @@ import SnapKit
 import Kingfisher
 
 final class DetailViewController: UIViewController {
-    
     let backButton: UIButton = {
         let button = UIButton()
         button.setTitle("Back", for: .normal)
@@ -38,7 +37,6 @@ final class DetailViewController: UIViewController {
     }
     @objc func onButtonTap() {
         self.dismiss(animated: true)
-        
     }
     private func setupImageLayout() {
         view.addSubview(imageView)

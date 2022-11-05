@@ -45,8 +45,8 @@ class ServiceImp: ServiceProtocol {
         let publicKey = "a6b4166234aa5492bf43f028bcbb94d1"
         let timestamp = String(Date().timeStamp)
         let hash = timestamp + privateKey + publicKey
-        let paramForListOfHeroes = URL + "\(idHero)" + "?ts=" + timestamp + "&apikey=" + publicKey + "&hash=" + hash.MD5value
-
+        let paramForListOfHeroes = URL + "\(idHero)" + "?ts=" + timestamp +
+        "&apikey=" + publicKey + "&hash=" + hash.MD5value
         AF.download(paramForListOfHeroes).responseDecodable(of: HeroListUpruv.self) {response in
             guard let heroes = response.value else {return}
             let infoHeroes = heroes.data.result
@@ -63,8 +63,8 @@ class ServiceImp: ServiceProtocol {
         let publicKey = "a6b4166234aa5492bf43f028bcbb94d1"
         let timestamp = String(Date().timeStamp)
         let hash = timestamp + privateKey + publicKey
-        let paramForListOfHeroes = URL + "?ts=" + timestamp + "&apikey=" + publicKey + "&hash=" + hash.MD5value
-        
+        let paramForListOfHeroes = URL + "?ts=" + timestamp +
+        "&apikey=" + publicKey + "&hash=" + hash.MD5value
         AF.download(paramForListOfHeroes).responseDecodable(of: HeroListUpruv.self) {response in
             guard let heroes = response.value else {return}
             let result = heroes.data.result
