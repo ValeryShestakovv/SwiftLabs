@@ -7,6 +7,7 @@ final class DetailViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Back", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.alpha = 0
         return button
     }()
     let imageView: UIImageView = {
@@ -42,6 +43,7 @@ final class DetailViewController: UIViewController {
         super.viewDidAppear(animated)
         topNameLableConstraint?.update(inset: 700)
         UIView.animate(withDuration: 0.5) {
+            self.backButton.alpha = 1
             self.effect.frame = self.view.frame
             self.effect.effect = UIBlurEffect(style: .dark)
             self.view.layoutIfNeeded()
@@ -87,7 +89,6 @@ final class DetailViewController: UIViewController {
     func compose(heroId: Int) {
         ServiceImp().getHero(idHero: heroId) { result in
             DispatchQueue.main.async {
-                self.nameLable.text = result.name
                 self.detailLable.text = result.details
             }
         }

@@ -129,6 +129,7 @@ extension ViewController: UICollectionViewDataSource {
                 as? GalleryCollectionViewCell else { return }
         let detailViewController = DetailViewController()
         detailViewController.imageView.image = cell.imageView.image
+        detailViewController.nameLable.text = cell.nameLable.text
         let heroId = heroesId[indexPath.row]
         detailViewController.compose(heroId: heroId)
         detailViewController.transitioningDelegate = self
