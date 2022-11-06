@@ -27,16 +27,34 @@ final class DetailViewController: UIViewController {
         text.numberOfLines = 0
         return text
     }()
+    var topNameLableConstraint: Constraint?
+    let effect = UIVisualEffectView()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageLayout()
+        view.addSubview(effect)
         setupButtonLayout()
         backButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
         setupNameLayout()
         setupDetailLayout()
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        topNameLableConstraint?.update(inset: 700)
+        UIView.animate(withDuration: 0.5) {
+            self.effect.frame = self.view.frame
+            self.effect.effect = UIBlurEffect(style: .dark)
+            self.view.layoutIfNeeded()
+        }
+    }
     @objc func onButtonTap() {
         self.dismiss(animated: true)
+        topNameLableConstraint?.update(inset: 40)
+        backButton.alpha = 0
+        UIView.animate(withDuration: 0.5) {
+            self.effect.effect = nil
+            self.view.layoutIfNeeded()
+        }
     }
     private func setupImageLayout() {
         view.addSubview(imageView)
@@ -54,14 +72,14 @@ final class DetailViewController: UIViewController {
     private func setupNameLayout() {
         view.addSubview(nameLable)
         nameLable.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(Layout.horizontalInset)
-            make.bottom.equalToSuperview().inset(Layout.verticalInset)
+            self.topNameLableConstraint = make.bottom.equalToSuperview().inset(40).constraint
+            make.left.right.equalToSuperview().inset(40)
         }
     }
     private func setupDetailLayout() {
         view.addSubview(detailLable)
         detailLable.snp.makeConstraints { make in
-            make.top.equalTo(nameLable.snp.top).inset(Layout.verticalInset)
+            make.top.equalTo(nameLable.snp.bottom).offset(40)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
             make.bottom.equalToSuperview().inset(Layout.horizontalInset)
         }
@@ -69,9 +87,6 @@ final class DetailViewController: UIViewController {
     func compose(heroId: Int) {
         ServiceImp().getHero(idHero: heroId) { result in
             DispatchQueue.main.async {
-//                let resource = ImageResource(downloadURL: URL(string: result.image)!)
-//                let placeholder = UIImage(named: "placeholder")
-//                self.imageView.kf.setImage(with: resource, placeholder: placeholder)
                 self.nameLable.text = result.name
                 self.detailLable.text = result.details
             }

@@ -22,7 +22,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupImageLayout()
-        setupTextLayout()
+        setupNameLayout()
     }
     func setupImageLayout() {
         addSubview(imageView)
@@ -30,9 +30,10 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
             make.edges.equalToSuperview()
         }
     }
-    func setupTextLayout() {
+    func setupNameLayout() {
         addSubview(nameLable)
         nameLable.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(40)
             make.left.right.bottom.equalToSuperview().inset(40)
         }
     }
