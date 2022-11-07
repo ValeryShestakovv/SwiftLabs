@@ -87,9 +87,14 @@ final class DetailViewController: UIViewController {
         }
     }
     func compose(heroId: Int) {
-        ServiceImp().getHero(idHero: heroId) { result in
+        ServiceImp().getHero(idHero: heroId) { [weak self] result in
             DispatchQueue.main.async {
-                self.detailLable.text = result.details
+                guard let imageUrl = URL(string: result.imageStr + ".jpg") else {return}
+                let resource = ImageResource(downloadURL: imageUrl)
+                let placeholder = UIImage(named: "placeholder")
+                self?.imageView.kf.setImage(with: resource, placeholder: placeholder)
+                self?.nameLable.text = result.name
+                self?.detailLable.text = result.details
             }
         }
     }

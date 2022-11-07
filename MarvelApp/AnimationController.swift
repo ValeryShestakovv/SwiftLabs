@@ -65,6 +65,7 @@ extension AnimationController: UIViewControllerAnimatedTransitioning {
             viewToAnimate.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             viewToAnimate.center = center
             viewToAnimate.layer.cornerRadius = 0
+
         } completion: { _ in
             transitionContext.completeTransition(true)
         }

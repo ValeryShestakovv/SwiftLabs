@@ -43,10 +43,10 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
-        service.getIdHeroes {[weak self] result in
-            self?.heroesId = result
+        service.getIdHeroes { result in
+            self.heroesId = result
             DispatchQueue.main.async {
-                self?.galleryCollectionView.reloadData()
+                self.galleryCollectionView.reloadData()
             }
         }
         setupFigureLayout()
@@ -125,11 +125,10 @@ extension ViewController: UICollectionViewDataSource {
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = galleryCollectionView.cellForItem(at: indexPath)
-                as? GalleryCollectionViewCell else { return }
         let detailViewController = DetailViewController()
+        guard let cell = galleryCollectionView.cellForItem(at: indexPath)
+                        as? GalleryCollectionViewCell else { return }
         detailViewController.imageView.image = cell.imageView.image
-        detailViewController.nameLable.text = cell.nameLable.text
         let heroId = heroesId[indexPath.row]
         detailViewController.compose(heroId: heroId)
         detailViewController.transitioningDelegate = self
