@@ -24,13 +24,13 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         setupImageLayout()
         setupNameLayout()
     }
-    func setupImageLayout() {
+    private func setupImageLayout() {
         addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-    func setupNameLayout() {
+    private func setupNameLayout() {
         addSubview(nameLable)
         nameLable.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(40)
@@ -46,7 +46,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
                 guard let imageUrl = URL(string: result.imageStr + ".jpg") else {return}
                 let resource = ImageResource(downloadURL: imageUrl)
                 let placeholder = UIImage(named: "placeholder")
-                self?.imageView.kf.setImage(with: resource)
+                self?.imageView.kf.setImage(with: resource, placeholder: placeholder)
                 self?.nameLable.text = result.name
             }
         }

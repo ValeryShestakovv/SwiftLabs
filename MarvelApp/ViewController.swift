@@ -2,7 +2,6 @@ import SnapKit
 import Kingfisher
 import UIKit
 import AnimatedCollectionViewLayout
-import UIImageColors
 
 final class ViewController: UIViewController {
     private let logoView: UIImageView = {

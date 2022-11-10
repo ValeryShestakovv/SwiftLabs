@@ -10,5 +10,4 @@ target 'MarvelApp' do
   pod 'SwiftLint'
   pod 'Kingfisher', '~> 7.0'
   pod 'Alamofire'
-  pod 'UIImageColors'
 end

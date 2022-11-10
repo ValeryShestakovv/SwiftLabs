@@ -3,7 +3,7 @@ import SnapKit
 import Kingfisher
 
 final class DetailViewController: UIViewController {
-    let backButton: UIButton = {
+    private let backButton: UIButton = {
         let button = UIButton()
         button.setTitle("Back", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -28,8 +28,8 @@ final class DetailViewController: UIViewController {
         text.numberOfLines = 0
         return text
     }()
-    var topNameLableConstraint: Constraint?
-    let effect = UIVisualEffectView()
+    private var topNameLableConstraint: Constraint?
+    private let effect = UIVisualEffectView()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageLayout()

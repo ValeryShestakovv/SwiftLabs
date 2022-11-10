@@ -4,7 +4,6 @@ PODS:
   - Kingfisher (7.4.1)
   - SnapKit (5.6.0)
   - SwiftLint (0.49.1)
-  - UIImageColors (2.1.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -12,7 +11,6 @@ DEPENDENCIES:
   - Kingfisher (~> 7.0)
   - SnapKit (~> 5.6.0)
   - SwiftLint
-  - UIImageColors
 
 SPEC REPOS:
   trunk:
@@ -21,7 +19,6 @@ SPEC REPOS:
     - Kingfisher
     - SnapKit
     - SwiftLint
-    - UIImageColors
 
 SPEC CHECKSUMS:
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
@@ -29,8 +26,7 @@ SPEC CHECKSUMS:
   Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   SwiftLint: 32ee33ded0636d0905ef6911b2b67bbaeeedafa5
-  UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
 
-PODFILE CHECKSUM: 3d546217e23e75551bb5a27c4b7a2888b6cbef11
+PODFILE CHECKSUM: 3afc29d7859a9ca892e115edc0b9acebd1fbead1
 
 COCOAPODS: 1.11.3
