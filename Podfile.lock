@@ -1,0 +1,20 @@
+PODS:
+  - AnimatedCollectionViewLayout (1.1.0)
+  - SnapKit (5.6.0)
+
+DEPENDENCIES:
+  - AnimatedCollectionViewLayout (~> 1.1.0)
+  - SnapKit (~> 5.6.0)
+
+SPEC REPOS:
+  trunk:
+    - AnimatedCollectionViewLayout
+    - SnapKit
+
+SPEC CHECKSUMS:
+  AnimatedCollectionViewLayout: 0c1a38c4be115c525c887be183fc91ef65737c5d
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+
+PODFILE CHECKSUM: 4d2f80155f46520d120dd80ef5331c71fde3b7dc
+
+COCOAPODS: 1.11.3
