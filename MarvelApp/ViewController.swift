@@ -2,6 +2,7 @@ import SnapKit
 import Kingfisher
 import UIKit
 import AnimatedCollectionViewLayout
+import RealmSwift
 
 final class ViewController: UIViewController {
     private let logoView: UIImageView = {
@@ -38,6 +39,8 @@ final class ViewController: UIViewController {
     }()
     private var heroesId: [Int] = []
     let service = ServiceImp()
+    let realm = try! Realm()
+    lazy var heroesDB: Results<HeroModelDB> = { self.realm.objects(HeroModelDB.self) }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,24 +115,62 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return heroesId.count
+        if TestInternetConnection.connectedToNetwork() == true {
+            return heroesId.count
+        } else {
+            return heroesDB.count
+        }
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.reuseId,
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
-        let heroId = heroesId[indexPath.row]
-        cell.compose(heroId: heroId)
+        //        cell.compose(heroId: heroId)
+        if TestInternetConnection.connectedToNetwork() == true {
+            let heroId = heroesId[indexPath.row]
+            ServiceImp().getHero(idHero: heroId) { result in
+                DispatchQueue.main.async {
+                    guard let imageUrl = URL(string: result.imageStr + ".jpg") else {return}
+                    let resource = ImageResource(downloadURL: imageUrl)
+                    let placeholder = UIImage(named: "placeholder")
+                    cell.imageView.kf.setImage(with: resource, placeholder: placeholder)
+                    cell.nameLable.text = result.name
+                    let placeholderData = NSData(data: placeholder!.jpegData(compressionQuality: 1)!)
+                    let object = self.realm.object(ofType: HeroModelDB.self, forPrimaryKey: "\(heroId)")
+                    if object == nil {
+                        let heroModel = HeroModelDB(name: result.name,
+                                                    discription: result.details,
+                                                    image: cell.imageView.image!,
+                                                    idHero: heroId)
+                        try! self.realm.write({
+                            self.realm.add(heroModel)
+                        })
+                    } else if object?.image == placeholderData {
+                        try! self.realm.write({
+                            object?.image = NSData(data: cell.imageView.image!.jpegData(compressionQuality: 1)!)
+                        })
+                    }
+                }
+            }} else {
+            cell.imageView.image = UIImage(data: heroesDB[indexPath.row].image as Data)
+            cell.nameLable.text = heroesDB[indexPath.row].name
+        }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
         guard let cell = galleryCollectionView.cellForItem(at: indexPath)
                         as? GalleryCollectionViewCell else { return }
-        detailViewController.imageView.image = cell.imageView.image
-        let heroId = heroesId[indexPath.row]
-        detailViewController.compose(heroId: heroId)
+        if TestInternetConnection.connectedToNetwork() == true {
+            let heroId = heroesId[indexPath.row]
+            detailViewController.imageView.image = cell.imageView.image
+            detailViewController.compose(heroId: heroId)
+        } else {
+            detailViewController.imageView.image = UIImage(data:heroesDB[indexPath.row].image as Data)
+            detailViewController.nameLable.text = heroesDB[indexPath.row].name
+            detailViewController.detailLable.text = heroesDB[indexPath.row].discription
+        }
         detailViewController.transitioningDelegate = self
         detailViewController.modalPresentationStyle = .custom
         present(detailViewController, animated: true)
