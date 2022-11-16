@@ -38,10 +38,11 @@ final class ViewController: UIViewController {
         return collectionView
     }()
     private var horisontalGallaryConstraint: Constraint?
-    var activityView: UIView?
+    private var activityView: UIView?
     private var listHeroes: [HeroModel] = []
-    let service = ServiceImp()
-    let realm = try! Realm()
+    private var totalHeroes: Int?
+    private let service = ServiceImp()
+    private let realm = try! Realm()
     lazy var heroesDB: Results<HeroModelDB> = { self.realm.objects(HeroModelDB.self) }()
 
     override func viewDidLoad() {
@@ -55,8 +56,9 @@ final class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showSpinner()
-        service.getListHeroes { result in
+        service.getListHeroes(offset: listHeroes.count) { result, total in
             self.listHeroes = result
+            self.totalHeroes = total
             DispatchQueue.main.async {
                 self.galleryCollectionView.reloadData()
                 self.removeSpinner()
@@ -138,7 +140,6 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
                 return
             }
         figure.backgroundColor = color
-        
     }
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -187,6 +188,19 @@ extension ViewController: UICollectionViewDataSource {
 //            cell.nameLable.text = heroesDB[indexPath.row].name
         }
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        if listHeroes.count < totalHeroes ?? 0 && indexPath.row == listHeroes.count - 1 {
+            service.getListHeroes(offset: listHeroes.count) { result, total in
+                self.listHeroes.append(contentsOf: result)
+                self.totalHeroes = total
+                DispatchQueue.main.async {
+                    self.galleryCollectionView.reloadData()
+                }
+            }
+        }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()

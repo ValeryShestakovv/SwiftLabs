@@ -8,6 +8,7 @@ struct HeroListUpruvPayload: Decodable {
 
 struct HeroListPayload: Decodable {
     let count: Int?
+    let total: Int?
     let results: [HeroPayload]?
 }
 
@@ -33,9 +34,10 @@ final class ServiceImp: ServiceProtocol {
     private func endpoint(path:String) -> String {
         return baseUrl + path
     }
-    private func getParams() -> [String: String] {
+    private func getParams(offset: Int) -> [String: String] {
         let hash = timestamp + privateKey + publicKey
         let parameters: [String: String] = [
+            "offset": "\(offset)",
             "ts": "\(timestamp)",
             "apikey": "\(publicKey)",
             "hash": "\(hash.MD5value)"
@@ -45,7 +47,7 @@ final class ServiceImp: ServiceProtocol {
     func getDetailsHero(idHero: Int, completion: @escaping (HeroModel) -> Void) {
         AF.request(endpoint(path: "characters/" + String(idHero)),
                    method: .get,
-                   parameters: getParams(),
+                   parameters: getParams(offset: 0),
                    encoder: URLEncodedFormParameterEncoder(destination: .queryString))
         .responseDecodable(of: HeroListUpruvPayload.self) { response in
             guard let heroPayload = response.value?.data?.results?[0] else {
@@ -56,24 +58,25 @@ final class ServiceImp: ServiceProtocol {
             completion(heroModel)
         }
     }
-    func getListHeroes(completion: @escaping ([HeroModel]) -> Void) {
+    func getListHeroes(offset: Int, completion: @escaping ([HeroModel], Int) -> Void) {
         AF.download(endpoint(path: "characters"),
                     method: .get,
-                    parameters: getParams(),
+                    parameters: getParams(offset: offset),
                     encoder: URLEncodedFormParameterEncoder(destination: .queryString))
-            .responseDecodable(of: HeroListUpruvPayload.self) {response in
-                guard let heroPayload = response.value?.data?.results else {
-                completion([])
+        .responseDecodable(of: HeroListUpruvPayload.self) {response in
+            guard let heroPayload = response.value?.data?.results,
+                  let totalHeroes = response.value?.data?.total else {
+                completion([], 0)
                 return
             }
             var heroIdList = [HeroModel]()
             for index in 0...heroPayload.count-1 {
-                guard let idHero = heroPayload[index].id else {
+                guard heroPayload[index].id != nil else {
                     continue
                 }
                 heroIdList.append(HeroModel(dtoHero: heroPayload[index]))
             }
-            completion(heroIdList)
+            completion(heroIdList, totalHeroes)
         }
     }
 }
