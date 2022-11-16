@@ -37,7 +37,9 @@ final class ViewController: UIViewController {
         collectionView.dataSource = self
         return collectionView
     }()
-    private var heroesId: [Int] = []
+    private var horisontalGallaryConstraint: Constraint?
+    var activityView: UIView?
+    private var listHeroes: [HeroModel] = []
     let service = ServiceImp()
     let realm = try! Realm()
     lazy var heroesDB: Results<HeroModelDB> = { self.realm.objects(HeroModelDB.self) }()
@@ -45,16 +47,47 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
-        service.getIdHeroes { result in
-            self.heroesId = result
-            DispatchQueue.main.async {
-                self.galleryCollectionView.reloadData()
-            }
-        }
         setupFigureLayout()
         setupLogoLayout()
         setupLabelLayout()
         setupGalleryLayout()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        showSpinner()
+        service.getListHeroes { result in
+            self.listHeroes = result
+            DispatchQueue.main.async {
+                self.galleryCollectionView.reloadData()
+                self.removeSpinner()
+            }
+        }
+    }
+    private func showSpinner() {
+        activityView = UIView(frame: view.bounds)
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .red
+        activityIndicator.center = view.center
+        activityIndicator.startAnimating()
+        let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        blurEffect.frame = view.frame
+        activityView?.addSubview(blurEffect)
+        activityView?.addSubview(activityIndicator)
+        activityView?.alpha = 0
+        view.addSubview(activityView!)
+        UIView.animate(withDuration: 0.5) {
+            self.activityView?.alpha = 1
+        }
+    }
+    private func removeSpinner() {
+        activityView?.alpha = 1
+        horisontalGallaryConstraint?.update(inset: 0)
+        UIView.animate(withDuration: 0.5) {
+            self.activityView?.alpha = 0
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            self.activityView?.removeFromSuperview()
+        }
     }
 
     private func setupFigureLayout() {
@@ -82,7 +115,7 @@ final class ViewController: UIViewController {
         view.addSubview(galleryCollectionView)
         galleryCollectionView.snp.makeConstraints { make in
             make.top.equalTo(textLable.snp.bottom).inset(10)
-            make.left.equalToSuperview()
+            self.horisontalGallaryConstraint = make.left.equalToSuperview().inset(500).constraint
             make.right.equalToSuperview()
             make.bottom.equalToSuperview()
         }
@@ -105,6 +138,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
                 return
             }
         figure.backgroundColor = color
+        
     }
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -116,7 +150,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if TestInternetConnection.connectedToNetwork() == true {
-            return heroesId.count
+            return listHeroes.count
         } else {
             return heroesDB.count
         }
@@ -128,33 +162,29 @@ extension ViewController: UICollectionViewDataSource {
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
         //        cell.compose(heroId: heroId)
         if TestInternetConnection.connectedToNetwork() == true {
-            let heroId = heroesId[indexPath.row]
-            ServiceImp().getHero(idHero: heroId) { result in
-                DispatchQueue.main.async {
-                    guard let imageUrl = URL(string: result.imageStr + ".jpg") else {return}
-                    let resource = ImageResource(downloadURL: imageUrl)
-                    let placeholder = UIImage(named: "placeholder")
-                    cell.imageView.kf.setImage(with: resource, placeholder: placeholder)
-                    cell.nameLable.text = result.name
-                    let placeholderData = NSData(data: placeholder!.jpegData(compressionQuality: 1)!)
-                    let object = self.realm.object(ofType: HeroModelDB.self, forPrimaryKey: "\(heroId)")
-                    if object == nil {
-                        let heroModel = HeroModelDB(name: result.name,
-                                                    discription: result.details,
-                                                    image: cell.imageView.image!,
-                                                    idHero: heroId)
-                        try! self.realm.write({
-                            self.realm.add(heroModel)
-                        })
-                    } else if object?.image == placeholderData {
-                        try! self.realm.write({
-                            object?.image = NSData(data: cell.imageView.image!.jpegData(compressionQuality: 1)!)
-                        })
-                    }
-                }
-            }} else {
-            cell.imageView.image = UIImage(data: heroesDB[indexPath.row].image as Data)
-            cell.nameLable.text = heroesDB[indexPath.row].name
+            guard let imageUrl = URL(string: listHeroes[indexPath.row].imageStr + ".jpg") else {return cell}
+            let resource = ImageResource(downloadURL: imageUrl)
+            let placeholder = UIImage(named: "placeholder")
+            cell.imageView.kf.setImage(with: resource, placeholder: placeholder)
+            cell.nameLable.text = listHeroes[indexPath.row].name
+//            let placeholderData = NSData(data: placeholder!.jpegData(compressionQuality: 1)!)
+//            let object = self.realm.object(ofType: HeroModelDB.self, forPrimaryKey: "\(heroId)")
+//            if object == nil {
+//                let heroModel = HeroModelDB(name: result.name,
+//                                            discription: result.details,
+//                                            image: cell.imageView.image!,
+//                                            idHero: heroId)
+//                try! self.realm.write({
+//                    self.realm.add(heroModel)
+//                })
+//            } else if object?.image == placeholderData {
+//                try! self.realm.write({
+//                    object?.image = NSData(data: cell.imageView.image!.jpegData(compressionQuality: 1)!)
+//                })
+//            }
+//        } else {
+//            cell.imageView.image = UIImage(data: heroesDB[indexPath.row].image as Data)
+//            cell.nameLable.text = heroesDB[indexPath.row].name
         }
         return cell
     }
@@ -163,7 +193,7 @@ extension ViewController: UICollectionViewDataSource {
         guard let cell = galleryCollectionView.cellForItem(at: indexPath)
                         as? GalleryCollectionViewCell else { return }
         if TestInternetConnection.connectedToNetwork() == true {
-            let heroId = heroesId[indexPath.row]
+            let heroId = listHeroes[indexPath.row].id
             detailViewController.imageView.image = cell.imageView.image
             detailViewController.compose(heroId: heroId)
         } else {

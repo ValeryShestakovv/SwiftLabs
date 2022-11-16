@@ -87,7 +87,7 @@ final class DetailViewController: UIViewController {
         }
     }
     func compose(heroId: Int) {
-        ServiceImp().getHero(idHero: heroId) { [weak self] result in
+        ServiceImp().getDetailsHero(idHero: heroId) { [weak self] result in
             DispatchQueue.main.async {
                 guard let imageUrl = URL(string: result.imageStr + ".jpg") else {return}
                 let resource = ImageResource(downloadURL: imageUrl)

@@ -42,7 +42,7 @@ final class ServiceImp: ServiceProtocol {
         ]
         return parameters
     }
-    func getHero(idHero: Int, completion: @escaping (HeroModel) -> Void) {
+    func getDetailsHero(idHero: Int, completion: @escaping (HeroModel) -> Void) {
         AF.request(endpoint(path: "characters/" + String(idHero)),
                    method: .get,
                    parameters: getParams(),
@@ -56,7 +56,7 @@ final class ServiceImp: ServiceProtocol {
             completion(heroModel)
         }
     }
-    func getIdHeroes(completion: @escaping ([Int]) -> Void) {
+    func getListHeroes(completion: @escaping ([HeroModel]) -> Void) {
         AF.download(endpoint(path: "characters"),
                     method: .get,
                     parameters: getParams(),
@@ -66,12 +66,12 @@ final class ServiceImp: ServiceProtocol {
                 completion([])
                 return
             }
-            var heroIdList = [Int]()
+            var heroIdList = [HeroModel]()
             for index in 0...heroPayload.count-1 {
                 guard let idHero = heroPayload[index].id else {
                     continue
                 }
-                heroIdList.append(idHero)
+                heroIdList.append(HeroModel(dtoHero: heroPayload[index]))
             }
             completion(heroIdList)
         }
@@ -80,6 +80,7 @@ final class ServiceImp: ServiceProtocol {
 extension HeroModel {
     init(dtoHero: HeroPayload) {
         self.init(
+            id: dtoHero.id ?? 0,
             imageStr: dtoHero.thumbnail?.imagePath ?? "",
             name: dtoHero.name ?? "",
             details: dtoHero.description ?? ""

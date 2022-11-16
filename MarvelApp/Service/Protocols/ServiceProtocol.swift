@@ -1,5 +1,5 @@
 import Foundation
 
 protocol ServiceProtocol {
-    func getIdHeroes(completion: @escaping ([Int]) -> Void)
+    func getListHeroes(completion: @escaping ([HeroModel]) -> Void)
 }
