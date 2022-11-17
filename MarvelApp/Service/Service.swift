@@ -34,9 +34,10 @@ final class ServiceImp: ServiceProtocol {
     private func endpoint(path:String) -> String {
         return baseUrl + path
     }
-    private func getParams(offset: Int) -> [String: String] {
+    private func getParams(offset: Int, limit: Int) -> [String: String] {
         let hash = timestamp + privateKey + publicKey
         let parameters: [String: String] = [
+            "limit": "\(limit)",
             "offset": "\(offset)",
             "ts": "\(timestamp)",
             "apikey": "\(publicKey)",
@@ -47,7 +48,7 @@ final class ServiceImp: ServiceProtocol {
     func getDetailsHero(idHero: Int, completion: @escaping (HeroModel) -> Void) {
         AF.request(endpoint(path: "characters/" + String(idHero)),
                    method: .get,
-                   parameters: getParams(offset: 0),
+                   parameters: getParams(offset: 0, limit: 1),
                    encoder: URLEncodedFormParameterEncoder(destination: .queryString))
         .responseDecodable(of: HeroListUpruvPayload.self) { response in
             guard let heroPayload = response.value?.data?.results?[0] else {
@@ -58,10 +59,10 @@ final class ServiceImp: ServiceProtocol {
             completion(heroModel)
         }
     }
-    func getListHeroes(offset: Int, completion: @escaping ([HeroModel], Int) -> Void) {
+    func getListHeroes(offset: Int, limit: Int, completion: @escaping ([HeroModel], Int) -> Void) {
         AF.download(endpoint(path: "characters"),
                     method: .get,
-                    parameters: getParams(offset: offset),
+                    parameters: getParams(offset: offset, limit: limit),
                     encoder: URLEncodedFormParameterEncoder(destination: .queryString))
         .responseDecodable(of: HeroListUpruvPayload.self) {response in
             guard let heroPayload = response.value?.data?.results,

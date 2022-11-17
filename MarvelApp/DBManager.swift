@@ -1,6 +1,8 @@
 import Foundation
 import RealmSwift
 
+private let realm = try! Realm()
+
 class HeroModelDB: Object {
     @objc dynamic var name = ""
     @objc dynamic var discription = ""
@@ -16,4 +18,12 @@ class HeroModelDB: Object {
         self.image = NSData(data: image.jpegData(compressionQuality: 1)!)
         self.idHero = String(idHero)
     }
+}
+func addObjectDB(hero: HeroModelDB) {
+        try! realm.write({
+            realm.add(hero, update: .modified)
+        })
+}
+func getAllObjectsDB() -> Results<HeroModelDB> {
+    return realm.objects(HeroModelDB.self)
 }

@@ -11,4 +11,5 @@ target 'MarvelApp' do
   pod 'Kingfisher', '~> 7.0'
   pod 'Alamofire'
   pod 'RealmSwift', '~>10'
+  pod 'lottie-ios'
 end

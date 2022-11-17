@@ -35,6 +35,11 @@ final class ViewController: UIViewController {
         collectionView.isPagingEnabled = true
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.tintColor = .red
+        collectionView.refreshControl?.addTarget(self,
+                                                action: #selector(refresh(sender:)),
+                                                for: .valueChanged)
         return collectionView
     }()
     private var horisontalGallaryConstraint: Constraint?
@@ -42,9 +47,7 @@ final class ViewController: UIViewController {
     private var listHeroes: [HeroModel] = []
     private var totalHeroes: Int?
     private let service = ServiceImp()
-    private let realm = try! Realm()
-    lazy var heroesDB: Results<HeroModelDB> = { self.realm.objects(HeroModelDB.self) }()
-
+    lazy var heroesDB: Results<HeroModelDB> = getAllObjectsDB()
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
@@ -56,7 +59,7 @@ final class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showSpinner()
-        service.getListHeroes(offset: listHeroes.count) { result, total in
+        service.getListHeroes(offset: listHeroes.count, limit: 10) { result, total in
             self.listHeroes = result
             self.totalHeroes = total
             DispatchQueue.main.async {
@@ -64,6 +67,15 @@ final class ViewController: UIViewController {
                 self.removeSpinner()
             }
         }
+    }
+    @objc func refresh(sender: UIRefreshControl) {
+        service.getListHeroes(offset: 0, limit: listHeroes.count) { result, _ in
+            self.listHeroes = result
+            DispatchQueue.main.async {
+                self.galleryCollectionView.reloadData()
+            }
+        }
+        sender.endRefreshing()
     }
     private func showSpinner() {
         activityView = UIView(frame: view.bounds)
@@ -161,31 +173,11 @@ extension ViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.reuseId,
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
-        //        cell.compose(heroId: heroId)
         if TestInternetConnection.connectedToNetwork() == true {
-            guard let imageUrl = URL(string: listHeroes[indexPath.row].imageStr + ".jpg") else {return cell}
-            let resource = ImageResource(downloadURL: imageUrl)
-            let placeholder = UIImage(named: "placeholder")
-            cell.imageView.kf.setImage(with: resource, placeholder: placeholder)
-            cell.nameLable.text = listHeroes[indexPath.row].name
-//            let placeholderData = NSData(data: placeholder!.jpegData(compressionQuality: 1)!)
-//            let object = self.realm.object(ofType: HeroModelDB.self, forPrimaryKey: "\(heroId)")
-//            if object == nil {
-//                let heroModel = HeroModelDB(name: result.name,
-//                                            discription: result.details,
-//                                            image: cell.imageView.image!,
-//                                            idHero: heroId)
-//                try! self.realm.write({
-//                    self.realm.add(heroModel)
-//                })
-//            } else if object?.image == placeholderData {
-//                try! self.realm.write({
-//                    object?.image = NSData(data: cell.imageView.image!.jpegData(compressionQuality: 1)!)
-//                })
-//            }
-//        } else {
-//            cell.imageView.image = UIImage(data: heroesDB[indexPath.row].image as Data)
-//            cell.nameLable.text = heroesDB[indexPath.row].name
+            cell.compose(hero: listHeroes[indexPath.row])
+        } else {
+            cell.imageView.image = UIImage(data: heroesDB[indexPath.row].image as Data)
+            cell.nameLable.text = heroesDB[indexPath.row].name
         }
         return cell
     }
@@ -193,9 +185,8 @@ extension ViewController: UICollectionViewDataSource {
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
         if listHeroes.count < totalHeroes ?? 0 && indexPath.row == listHeroes.count - 1 {
-            service.getListHeroes(offset: listHeroes.count) { result, total in
+            service.getListHeroes(offset: listHeroes.count, limit: 10) { result, _ in
                 self.listHeroes.append(contentsOf: result)
-                self.totalHeroes = total
                 DispatchQueue.main.async {
                     self.galleryCollectionView.reloadData()
                 }
