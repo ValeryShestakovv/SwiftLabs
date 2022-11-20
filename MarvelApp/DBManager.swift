@@ -1,29 +1,17 @@
 import Foundation
 import RealmSwift
 
-private let realm = try! Realm()
-
-class HeroModelDB: Object {
-    @objc dynamic var name = ""
-    @objc dynamic var discription = ""
-    @objc dynamic var image = NSData()
-    @objc dynamic var idHero = ""
-    override static func primaryKey() -> String? {
-      return "idHero"
+public class DBManager {
+    static func addObjectDB(realm: Realm?, hero: HeroModelDB) {
+        do {
+            try realm?.write {
+                realm?.add(hero, update: .modified)
+            }
+        } catch let error {
+            print(error)
+        }
     }
-    convenience init(name: String, discription: String, image: UIImage, idHero: Int) {
-        self.init()
-        self.name = name
-        self.discription = discription
-        self.image = NSData(data: image.jpegData(compressionQuality: 1)!)
-        self.idHero = String(idHero)
+    static func getAllObjects(realm: Realm) -> Results<HeroModelDB> {
+        return realm.objects(HeroModelDB.self)
     }
-}
-func addObjectDB(hero: HeroModelDB) {
-        try! realm.write({
-            realm.add(hero, update: .modified)
-        })
-}
-func getAllObjectsDB() -> Results<HeroModelDB> {
-    return realm.objects(HeroModelDB.self)
 }
