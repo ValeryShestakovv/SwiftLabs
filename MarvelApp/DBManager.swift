@@ -1,8 +1,18 @@
 import Foundation
+import Realm
 import RealmSwift
 
 public class DBManager {
-    static func addObjectDB(realm: Realm?, hero: HeroModelDB) {
+    static func realm() -> Realm? {
+        do {
+            let realm = try Realm()
+            return realm
+        } catch {
+            // LOG ERROR
+            return nil
+        }
+    }
+    static func addObjectDB<T: RealmSwiftObject>(realm: Realm?, hero: T) {
         do {
             try realm?.write {
                 realm?.add(hero, update: .modified)
@@ -11,7 +21,7 @@ public class DBManager {
             print(error)
         }
     }
-    static func getAllObjects(realm: Realm) -> Results<HeroModelDB> {
-        return realm.objects(HeroModelDB.self)
+    static func getAllObjects<T: RealmSwiftObject>(realm: Realm) -> Results<T> {
+        return realm.objects(T.self)
     }
 }

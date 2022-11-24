@@ -47,7 +47,7 @@ final class ViewController: UIViewController {
     private var listHeroes: [HeroModel] = []
     private var totalHeroes: Int?
     private let service = ServiceImp()
-    let database = Realm.safeInit()
+    let database = DBManager.realm()
     lazy var heroesDB: Results<HeroModelDB> = DBManager.getAllObjects(realm: database!)
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -174,8 +174,8 @@ extension ViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.reuseId,
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
-        let currentHero = listHeroes[indexPath.row]
         if TestInternetConnection.connectedToNetwork() == true {
+            let currentHero = listHeroes[indexPath.row]
             guard let imageUrl = URL(string: currentHero.imageStr + ".jpg") else { return cell}
             let resource = ImageResource(downloadURL: imageUrl)
             let placeholder = UIImage(named: "placeholder")
@@ -188,8 +188,9 @@ extension ViewController: UICollectionViewDataSource {
                 DBManager.addObjectDB(realm: self.database, hero: heroModel)
             }
         } else {
-            cell.imageView.image = UIImage(data: heroesDB[indexPath.row].image as Data)
-            cell.nameLable.text = heroesDB[indexPath.row].name
+            let currentHero = heroesDB[indexPath.row]
+            cell.imageView.image = UIImage(data: currentHero.image as Data)
+            cell.nameLable.text = currentHero.name
         }
         return cell
     }
