@@ -60,7 +60,7 @@ final class ServiceImp: ServiceProtocol {
         }
     }
     func getListHeroes(offset: Int, limit: Int, completion: @escaping ([HeroModel], Int) -> Void) {
-        AF.download(endpoint(path: "characters"),
+        AF.request(endpoint(path: "characters"),
                     method: .get,
                     parameters: getParams(offset: offset, limit: limit),
                     encoder: URLEncodedFormParameterEncoder(destination: .queryString))

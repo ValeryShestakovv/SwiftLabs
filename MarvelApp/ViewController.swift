@@ -43,7 +43,7 @@ final class ViewController: UIViewController {
         return collectionView
     }()
     private var horisontalGallaryConstraint: Constraint?
-    private var activityView: UIView?
+    private var activityView = UIView()
     private var listHeroes: [HeroModel] = []
     private var totalHeroes: Int?
     private let service = ServiceImp()
@@ -59,6 +59,7 @@ final class ViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        createSpinnerView()
         showSpinner()
         service.getListHeroes(offset: listHeroes.count, limit: 10) { result, total in
             self.listHeroes = result
@@ -78,7 +79,7 @@ final class ViewController: UIViewController {
         }
         sender.endRefreshing()
     }
-    private func showSpinner() {
+    private func createSpinnerView() {
         activityView = UIView(frame: view.bounds)
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.color = .red
@@ -86,22 +87,22 @@ final class ViewController: UIViewController {
         activityIndicator.startAnimating()
         let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         blurEffect.frame = view.frame
-        activityView?.addSubview(blurEffect)
-        activityView?.addSubview(activityIndicator)
-        activityView?.alpha = 0
-        view.addSubview(activityView!)
+        activityView.addSubview(blurEffect)
+        activityView.addSubview(activityIndicator)
+        activityView.alpha = 0
+        view.addSubview(activityView)
+    }
+    private func showSpinner() {
         UIView.animate(withDuration: 0.5) {
-            self.activityView?.alpha = 1
+            self.activityView.alpha = 1
         }
     }
     private func removeSpinner() {
-        activityView?.alpha = 1
+        activityView.alpha = 1
         horisontalGallaryConstraint?.update(inset: 0)
         UIView.animate(withDuration: 0.5) {
-            self.activityView?.alpha = 0
+            self.activityView.alpha = 0
             self.view.layoutIfNeeded()
-        } completion: { _ in
-            self.activityView?.removeFromSuperview()
         }
     }
 
