@@ -1,6 +1,5 @@
 import UIKit
 import SnapKit
-import Kingfisher
 
 final class DetailViewController: UIViewController {
     private let backButton: UIButton = {
@@ -30,6 +29,22 @@ final class DetailViewController: UIViewController {
     }()
     private var topNameLableConstraint: Constraint?
     private let effect = UIVisualEffectView()
+    weak var viewModel: DetailViewModal! {
+        didSet {
+            self.imageView.image = UIImage(data: Data(referencing: viewModel.imageData))
+            self.nameLable.text = viewModel.nameString
+            self.detailLable.text = viewModel.discriptionString
+            if viewModel.connectedToNetwork == true {
+                viewModel.downloadDetail { hero in
+                    self.nameLable.text = hero.name
+                    self.detailLable.text = hero.details
+                }
+                viewModel.downloadImage { imageData in
+                    self.imageView.image = UIImage(data: Data(referencing: imageData))
+                }
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageLayout()
@@ -84,18 +99,6 @@ final class DetailViewController: UIViewController {
             make.top.equalTo(nameLable.snp.bottom).offset(40)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
             make.bottom.equalToSuperview().inset(Layout.horizontalInset)
-        }
-    }
-    func compose(heroId: Int) {
-        ServiceImp().getDetailsHero(idHero: heroId) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let imageUrl = URL(string: result.imageStr + ".jpg") else {return}
-                let resource = ImageResource(downloadURL: imageUrl)
-                let placeholder = UIImage(named: "placeholder")
-                self?.imageView.kf.setImage(with: resource, placeholder: placeholder)
-                self?.nameLable.text = result.name
-                self?.detailLable.text = result.details
-            }
         }
     }
 }

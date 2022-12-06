@@ -9,11 +9,11 @@ class HeroModelDB: Object {
     override static func primaryKey() -> String? {
       return "idHero"
     }
-    convenience init(name: String, discription: String, image: UIImage, idHero: Int) {
+    convenience init(name: String, discription: String, image: NSData, idHero: Int) {
         self.init()
         self.name = name
         self.discription = discription
-        self.image = NSData(data: image.jpegData(compressionQuality: 1)!)
+        self.image = image
         self.idHero = String(idHero)
     }
 }

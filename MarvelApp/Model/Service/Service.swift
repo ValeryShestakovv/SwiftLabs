@@ -1,30 +1,7 @@
 import Foundation
 import Alamofire
+import AlamofireImage
 import UIKit
-
-struct HeroListUpruvPayload: Decodable {
-    let data: HeroListPayload?
-}
-
-struct HeroListPayload: Decodable {
-    let count: Int?
-    let total: Int?
-    let results: [HeroPayload]?
-}
-
-struct HeroPayload: Decodable {
-    let id: Int?
-    let name: String?
-    let description: String?
-    let thumbnail: ThumbnailPayload?
-}
-
-struct ThumbnailPayload: Decodable {
-    let imagePath: String?
-    enum CodingKeys: String, CodingKey {
-        case imagePath = "path"
-    }
-}
 
 final class ServiceImp: ServiceProtocol {
     private let baseUrl = "https://gateway.marvel.com/v1/public/"
@@ -78,6 +55,14 @@ final class ServiceImp: ServiceProtocol {
                 heroIdList.append(HeroModel(dtoHero: heroPayload[index]))
             }
             completion(heroIdList, totalHeroes)
+        }
+    }
+    func getImage(strURL: String, complition: @escaping (NSData) -> Void) {
+        AF.request(strURL + ".jpg").responseImage { response in
+            if case .success(let image) = response.result {
+                let imageData = NSData(data: (image.jpegData(compressionQuality: 1) ?? Data()))
+                complition(imageData)
+            }
         }
     }
 }
