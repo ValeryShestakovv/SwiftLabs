@@ -2,6 +2,7 @@ import SnapKit
 import Kingfisher
 import UIKit
 import AnimatedCollectionViewLayout
+import RealmSwift
 
 final class ViewController: UIViewController {
     private let logoView: UIImageView = {
@@ -34,24 +35,75 @@ final class ViewController: UIViewController {
         collectionView.isPagingEnabled = true
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.tintColor = .red
+        collectionView.refreshControl?.addTarget(self,
+                                                action: #selector(refresh(sender:)),
+                                                for: .valueChanged)
         return collectionView
     }()
-    private var heroesId: [Int] = []
-    let service = ServiceImp()
-
+    private var horisontalGallaryConstraint: Constraint?
+    private var activityView = UIView()
+    private var listHeroes: [HeroModel] = []
+    private var totalHeroes: Int?
+    private let service = ServiceImp()
+    let database = DBManager.realm()
+    lazy var heroesDB: Results<HeroModelDB> = DBManager.getAllObjects(realm: database!)
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
-        service.getIdHeroes { result in
-            self.heroesId = result
-            DispatchQueue.main.async {
-                self.galleryCollectionView.reloadData()
-            }
-        }
         setupFigureLayout()
         setupLogoLayout()
         setupLabelLayout()
         setupGalleryLayout()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        createSpinnerView()
+        showSpinner()
+        service.getListHeroes(offset: listHeroes.count, limit: 10) { result, total in
+            self.listHeroes = result
+            self.totalHeroes = total
+            DispatchQueue.main.async {
+                self.galleryCollectionView.reloadData()
+                self.removeSpinner()
+            }
+        }
+    }
+    @objc func refresh(sender: UIRefreshControl) {
+        service.getListHeroes(offset: 0, limit: listHeroes.count) { result, _ in
+            self.listHeroes = result
+            DispatchQueue.main.async {
+                self.galleryCollectionView.reloadData()
+            }
+        }
+        sender.endRefreshing()
+    }
+    private func createSpinnerView() {
+        activityView = UIView(frame: view.bounds)
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .red
+        activityIndicator.center = view.center
+        activityIndicator.startAnimating()
+        let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        blurEffect.frame = view.frame
+        activityView.addSubview(blurEffect)
+        activityView.addSubview(activityIndicator)
+        activityView.alpha = 0
+        view.addSubview(activityView)
+    }
+    private func showSpinner() {
+        UIView.animate(withDuration: 0.5) {
+            self.activityView.alpha = 1
+        }
+    }
+    private func removeSpinner() {
+        activityView.alpha = 1
+        horisontalGallaryConstraint?.update(inset: 0)
+        UIView.animate(withDuration: 0.5) {
+            self.activityView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
     }
 
     private func setupFigureLayout() {
@@ -79,7 +131,7 @@ final class ViewController: UIViewController {
         view.addSubview(galleryCollectionView)
         galleryCollectionView.snp.makeConstraints { make in
             make.top.equalTo(textLable.snp.bottom).inset(10)
-            make.left.equalToSuperview()
+            self.horisontalGallaryConstraint = make.left.equalToSuperview().inset(500).constraint
             make.right.equalToSuperview()
             make.bottom.equalToSuperview()
         }
@@ -112,24 +164,62 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return heroesId.count
+        if TestInternetConnection.connectedToNetwork() == true {
+            return listHeroes.count
+        } else {
+            return heroesDB.count
+        }
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.reuseId,
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
-        let heroId = heroesId[indexPath.row]
-        cell.compose(heroId: heroId)
+        if TestInternetConnection.connectedToNetwork() == true {
+            let currentHero = listHeroes[indexPath.row]
+            guard let imageUrl = URL(string: currentHero.imageStr + ".jpg") else { return cell}
+            let resource = ImageResource(downloadURL: imageUrl)
+            let placeholder = UIImage(named: "placeholder")
+            cell.nameLable.text = currentHero.name
+            cell.imageView.kf.setImage(with: resource, placeholder: placeholder) { _ in
+                let heroModel = HeroModelDB(name: currentHero.name,
+                                            discription: currentHero.details,
+                                            image: cell.imageView.image ?? UIImage(),
+                                            idHero: currentHero.id)
+                DBManager.addObjectDB(realm: self.database, hero: heroModel)
+            }
+        } else {
+            let currentHero = heroesDB[indexPath.row]
+            cell.imageView.image = UIImage(data: currentHero.image as Data)
+            cell.nameLable.text = currentHero.name
+        }
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        if listHeroes.count < totalHeroes ?? 0 && indexPath.row == listHeroes.count - 1 {
+            service.getListHeroes(offset: listHeroes.count, limit: 10) { result, _ in
+                self.listHeroes.append(contentsOf: result)
+                DispatchQueue.main.async {
+                    self.galleryCollectionView.reloadData()
+                }
+            }
+        }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
         guard let cell = galleryCollectionView.cellForItem(at: indexPath)
                         as? GalleryCollectionViewCell else { return }
-        detailViewController.imageView.image = cell.imageView.image
-        let heroId = heroesId[indexPath.row]
-        detailViewController.compose(heroId: heroId)
+        if TestInternetConnection.connectedToNetwork() == true {
+            let heroId = listHeroes[indexPath.row].id
+            detailViewController.imageView.image = cell.imageView.image
+            detailViewController.compose(heroId: heroId)
+        } else {
+            detailViewController.imageView.image = UIImage(data:heroesDB[indexPath.row].image as Data)
+            detailViewController.nameLable.text = heroesDB[indexPath.row].name
+            detailViewController.detailLable.text = heroesDB[indexPath.row].discription
+        }
         detailViewController.transitioningDelegate = self
         detailViewController.modalPresentationStyle = .custom
         present(detailViewController, animated: true)

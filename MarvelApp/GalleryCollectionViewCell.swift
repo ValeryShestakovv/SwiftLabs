@@ -40,15 +40,17 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func compose(heroId: Int) {
-        ServiceImp().getHero(idHero: heroId) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let imageUrl = URL(string: result.imageStr + ".jpg") else {return}
-                let resource = ImageResource(downloadURL: imageUrl)
-                let placeholder = UIImage(named: "placeholder")
-                self?.imageView.kf.setImage(with: resource, placeholder: placeholder)
-                self?.nameLable.text = result.name
-            }
-        }
-    }
+//    func compose(hero: HeroModel) {
+//        guard let imageUrl = URL(string: hero.imageStr + ".jpg") else { return }
+//        let resource = ImageResource(downloadURL: imageUrl)
+//        let placeholder = UIImage(named: "placeholder")
+//        nameLable.text = hero.name
+//        imageView.kf.setImage(with: resource, placeholder: placeholder) { _ in
+//            let heroModel = HeroModelDB(name: hero.name,
+//                                        discription: hero.details,
+//                                        image: self.imageView.image ?? UIImage(),
+//                                        idHero: hero.id)
+//            DBManager.addObjectDB(realm: database, hero: heroModel)
+//        }
+//    }
 }

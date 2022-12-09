@@ -2,10 +2,11 @@ import Foundation
 import UIKit
 
 struct HeroModel: Stubable {
-    var imageStr: String
-    var name: String
-    var details: String
-    static let stub: HeroModel = .init(imageStr: "", name: "", details: "")
+    let id: Int
+    let imageStr: String
+    let name: String
+    let details: String
+    static let stub: HeroModel = .init(id: 0, imageStr: "", name: "", details: "")
 }
 
 protocol Stubable {
