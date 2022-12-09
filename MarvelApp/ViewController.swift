@@ -4,7 +4,6 @@ import UIKit
 import AnimatedCollectionViewLayout
 
 final class ViewController: UIViewController {
-
     private let logoView: UIImageView = {
         let logo = UIImageView()
         logo.image = UIImage(named: "logo")
@@ -37,11 +36,18 @@ final class ViewController: UIViewController {
         collectionView.dataSource = self
         return collectionView
     }()
-    private var items: [HeroModel] = HeroModel.fetchHero()
+    private var heroesId: [Int] = []
+    let service = ServiceImp()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
+        service.getIdHeroes { result in
+            self.heroesId = result
+            DispatchQueue.main.async {
+                self.galleryCollectionView.reloadData()
+            }
+        }
         setupFigureLayout()
         setupLogoLayout()
         setupLabelLayout()
@@ -81,56 +87,82 @@ final class ViewController: UIViewController {
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView is UICollectionView else {
             return
         }
         let centerPoint = CGPoint(x: scrollView.frame.size.width / 2 + scrollView.contentOffset.x,
                                   y: scrollView.frame.size.height / 2 + scrollView.contentOffset.y)
-        if let indexPath = galleryCollectionView.indexPathForItem(at: centerPoint) {
-            let item = items[indexPath.row]
-            figure.backgroundColor = item.color
-        }
+        guard
+            let indexPath = galleryCollectionView.indexPathForItem(at: centerPoint),
+            let cell = galleryCollectionView.dequeueReusableCell(
+                withReuseIdentifier: GalleryCollectionViewCell.reuseId,
+                for: indexPath) as? GalleryCollectionViewCell,
+            let color = cell.imageView.image?.averageColor else {
+                return
+            }
+        figure.backgroundColor = color
     }
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: Layout.galleryItemWidth, height: Layout.galleryItemHeight)
     }
-
 }
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+        return heroesId.count
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.reuseId,
             for: indexPath) as? GalleryCollectionViewCell else { return .init() }
-        let item = items[indexPath.row]
-        let resource = ImageResource(downloadURL: item.imageURL)
-        let placeholder = UIImage(named: "placeholder")
-        cell.imageView.kf.setImage(with: resource, placeholder: placeholder)
-        cell.textLable.text = item.name
+        let heroId = heroesId[indexPath.row]
+        cell.compose(heroId: heroId)
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Назад",
-                                                                style: .plain,
-                                                                target: nil,
-                                                                action: nil)
-        self.navigationItem.backBarButtonItem?.tintColor = .white
-        let item = items[indexPath.row]
-        let resource = ImageResource(downloadURL: item.imageURL)
-        let placeholder = UIImage(named: "placeholder")
-        detailViewController.imageView.kf.setImage(with: resource, placeholder: placeholder)
-        detailViewController.nameLable.text = item.name
-        detailViewController.detailLable.text = item.discription
-        navigationController?.pushViewController(detailViewController, animated: true)
+        guard let cell = galleryCollectionView.cellForItem(at: indexPath)
+                        as? GalleryCollectionViewCell else { return }
+        detailViewController.imageView.image = cell.imageView.image
+        let heroId = heroesId[indexPath.row]
+        detailViewController.compose(heroId: heroId)
+        detailViewController.transitioningDelegate = self
+        detailViewController.modalPresentationStyle = .custom
+        present(detailViewController, animated: true)
+    }
+}
+
+extension ViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController,
+                             presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard
+            let selectedIndexPathCell = galleryCollectionView.indexPathsForSelectedItems,
+            let selectedCell = galleryCollectionView.cellForItem(at: (selectedIndexPathCell.first)!) as?
+                GalleryCollectionViewCell,
+            let selectedCellSuperview = selectedCell.superview
+        else {
+            return nil
+        }
+        let originFrame = selectedCellSuperview.convert(selectedCell.frame, to: nil)
+        return AnimationController(animationDuration: 0.5, animationType: .present, cellFrame: originFrame)
+    }
+    func animationController(forDismissed
+                             dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard
+            let selectedIndexPathCell = galleryCollectionView.indexPathsForSelectedItems,
+            let selectedCell = galleryCollectionView.cellForItem(at: (selectedIndexPathCell.first)!) as?
+                GalleryCollectionViewCell,
+            let selectedCellSuperview = selectedCell.superview
+        else {
+            return nil
+        }
+        let originFrame = selectedCellSuperview.convert(selectedCell.frame, to: nil)
+        return AnimationController(animationDuration: 0.5, animationType: .dismiss, cellFrame: originFrame)
     }
 }
 
@@ -141,9 +173,9 @@ extension ViewController {
         static var horizontalTextInset: CGFloat { 65 }
         static var horizontalInset: CGFloat { 90 }
         static var verticalInset: CGFloat { 80 }
-        static var leftDistanceToView: CGFloat { 5 }
+        static var leftDistanceToView: CGFloat { 0 }
         static var rightDistanceToView: CGFloat { 0 }
-        static var galleryMinimumLineSpacing: CGFloat { 25 }
+        static var galleryMinimumLineSpacing: CGFloat { 0 }
         static let galleryItemWidth = (UIScreen.main.bounds.width - Layout.leftDistanceToView -
                                        Layout.rightDistanceToView - (Layout.galleryMinimumLineSpacing / 2))
         static let galleryItemHeight = UIScreen.main.bounds.height - 150
