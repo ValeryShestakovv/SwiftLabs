@@ -35,12 +35,25 @@ final class DetailsHeroViewController: UIViewController {
             self.nameLable.text = viewModel?.hero.name
             self.detailLable.text = viewModel?.hero.details
             if viewModel?.connectedToNetwork == true {
-                viewModel?.downloadDetail { hero in
-                    self.nameLable.text = hero.name
-                    self.detailLable.text = hero.details
+                viewModel?.downloadDetail { [weak self] result in
+                    guard let self = self else {return}
+                    switch result {
+                    case .success(let hero):
+                        self.nameLable.text = hero.name
+                        self.detailLable.text = hero.details
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
                 }
-                viewModel?.downloadImage { imageData in
-                    self.imageView.image = UIImage(data: Data(referencing: imageData))
+                viewModel?.downloadImage { [weak self] result in
+                    guard let self = self else {return}
+                    switch result {
+                    case .success(let imageData):
+                        self.imageView.image = UIImage(data: Data(referencing: imageData))
+                    case .failure(let error):
+                        self.imageView.image = UIImage(named: "placeholder")
+                        print(error.localizedDescription)
+                    }
                 }
             }
         }

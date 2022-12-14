@@ -14,11 +14,15 @@ final class GalleryCellViewModal {
     required init(hero: HeroModel) {
         self.hero = hero
     }
-    func downloadImage(complition:@escaping (NSData) -> Void) {
-        service.getImage(strURL: self.hero.imageStr) { result in
-            self.hero.imageData = result
-            self.mainViewModel?.addHeroToDB(hero: self.hero)
-            complition(result)
+    func downloadImage(complition:@escaping (Result<NSData, Error>) -> Void) {
+        service.getImage(strURL: self.hero.imageStr) { [weak self] result in
+            if result != nil {
+                self?.hero.imageData = result
+                self?.mainViewModel?.addHeroToDB(hero: self!.hero)
+                complition(.success(result))
+            } else {
+                complition(.failure(ErrorHandler.errorImage))
+            }
         }
     }
 }

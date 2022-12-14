@@ -15,7 +15,8 @@ final class MainViewModel {
         }
     }
     func getListHeroes(complition:@escaping () -> Void) {
-        service.getListHeroes(offset: listHeroes.count, limit: 10) { result, total in
+        service.getListHeroes(offset: listHeroes.count, limit: 10) { [weak self] result, total in
+            guard let self = self else {return}
             self.listHeroes = result
             self.totalHeroes = total
             complition()
@@ -23,14 +24,16 @@ final class MainViewModel {
     }
     func getAddListHeroes(indexHero: Int, complition:@escaping () -> Void) {
         if listHeroes.count < totalHeroes ?? 0 && indexHero == listHeroes.count - 1 {
-            service.getListHeroes(offset: listHeroes.count, limit: 10) { result, _ in
+            service.getListHeroes(offset: listHeroes.count, limit: 10) { [weak self] result, _ in
+                guard let self = self else {return}
                 self.listHeroes.append(contentsOf: result)
                 complition()
             }
         }
     }
     func refreshListHeroes(complition:@escaping () -> Void) {
-        service.getListHeroes(offset: 0, limit: listHeroes.count) { result, _ in
+        service.getListHeroes(offset: 0, limit: listHeroes.count) { [weak self] result, _ in
+            guard let self = self else {return}
             self.listHeroes = result
             complition()
         }

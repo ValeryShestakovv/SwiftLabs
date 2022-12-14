@@ -23,8 +23,15 @@ final class GalleryCellView: UICollectionViewCell {
             self.imageView.image = UIImage(data: Data(referencing: viewModel?.hero.imageData ?? NSData()))
             self.nameLabel.text = viewModel?.hero.name
             if viewModel?.connectedToNetwork == true {
-                viewModel?.downloadImage { imageData in
-                    self.imageView.image = UIImage(data: Data(referencing: imageData))
+                viewModel?.downloadImage { [weak self] result in
+                    guard let self = self else {return}
+                    switch result {
+                    case .success(let imageData):
+                        self.imageView.image = UIImage(data: Data(referencing: imageData))
+                    case .failure(let error):
+                        self.imageView.image = UIImage(named: "placeholder")
+                        print(error.localizedDescription)
+                    }
                 }
             }
         }
