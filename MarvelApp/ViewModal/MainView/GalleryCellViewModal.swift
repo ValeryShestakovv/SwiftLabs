@@ -1,9 +1,11 @@
 import Foundation
+import AlamofireImage
 
 final class GalleryCellViewModal {
     var hero: HeroModel
     private let service = ServiceImp()
     weak var mainViewModel: MainViewModel?
+    let imageCache = AutoPurgingImageCache()
     var connectedToNetwork: Bool {
         if TestInternetConnection.connectedToNetwork() == true {
             return true

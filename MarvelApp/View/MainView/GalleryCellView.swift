@@ -20,18 +20,31 @@ final class GalleryCellView: UICollectionViewCell {
     }()
     weak var viewModel: GalleryCellViewModal? {
         didSet {
-            self.imageView.image = UIImage(data: Data(referencing: viewModel?.hero.imageData ?? NSData()))
             self.nameLabel.text = viewModel?.hero.name
-            if viewModel?.connectedToNetwork == true {
-                viewModel?.downloadImage { [weak self] result in
-                    guard let self = self else {return}
-                    switch result {
-                    case .success(let imageData):
-                        self.imageView.image = UIImage(data: Data(referencing: imageData))
-                    case .failure(let error):
-                        self.imageView.image = UIImage(named: "placeholder")
-                        print(error.localizedDescription)
+            if viewModel?.imageCache.image(withIdentifier: String((viewModel?.hero.id)!)) == nil {
+                if viewModel?.connectedToNetwork == true {
+                    viewModel?.downloadImage { [weak self] result in
+                        guard let self = self else {return}
+                        switch result {
+                        case .success(let imageData):
+                            if let image = UIImage(data: Data(referencing: imageData)) {
+                                self.imageView.image = image
+                                if let idHero = self.viewModel?.hero.id {
+                                    self.viewModel?.imageCache.add(image,
+                                                              withIdentifier: String(idHero))
+                                }
+                            } else {
+                                self.imageView.image = UIImage(named: "placeholder")
+                            }
+                        case .failure(let error):
+                            self.imageView.image = UIImage(named: "placeholder")
+                            print(error.localizedDescription)
+                        }
                     }
+                }
+            } else {
+                if let idHero = self.viewModel?.hero.id {
+                    self.imageView.image = viewModel?.imageCache.image(withIdentifier: String(idHero))
                 }
             }
         }
