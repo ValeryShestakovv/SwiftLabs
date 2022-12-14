@@ -1,7 +1,7 @@
 import Foundation
 import RealmSwift
 
-class MainViewModel {
+final class MainViewModel {
     private var listHeroes: [HeroModel] = []
     private var totalHeroes: Int?
     private let service = ServiceImp()
@@ -55,11 +55,11 @@ class MainViewModel {
             return GalleryCellViewModal(hero: listHeroesDB[index])
         }
     }
-    func detailViewModel(index: Int) -> DetailViewModal {
+    func detailViewModel(index: Int) -> DetailsHeroViewModal {
         if connectedToNetwork == true {
-            return DetailViewModal(hero: listHeroes[index])
+            return DetailsHeroViewModal(hero: listHeroes[index])
         } else {
-            return DetailViewModal(hero: listHeroesDB[index])
+            return DetailsHeroViewModal(hero: listHeroesDB[index])
         }
     }
     func addHeroToDB(hero: HeroModelDB) {

@@ -1,6 +1,6 @@
 import Foundation
 
-class DetailViewModal {
+final class DetailsHeroViewModal {
     var imageData: NSData
     let imageString: String
     let nameString: String

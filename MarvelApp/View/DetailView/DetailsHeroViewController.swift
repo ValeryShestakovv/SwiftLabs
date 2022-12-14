@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-final class DetailViewController: UIViewController {
+final class DetailsHeroViewController: UIViewController {
     private let backButton: UIButton = {
         let button = UIButton()
         button.setTitle("Back", for: .normal)
@@ -29,7 +29,7 @@ final class DetailViewController: UIViewController {
     }()
     private var topNameLableConstraint: Constraint?
     private let effect = UIVisualEffectView()
-    weak var viewModel: DetailViewModal! {
+    weak var viewModel: DetailsHeroViewModal! {
         didSet {
             self.imageView.image = UIImage(data: Data(referencing: viewModel.imageData))
             self.nameLable.text = viewModel.nameString
@@ -105,7 +105,7 @@ final class DetailViewController: UIViewController {
 
 // MARK: Layout Guides
 
-extension DetailViewController {
+extension DetailsHeroViewController {
     enum Layout {
         static var horizontalInset: CGFloat { 50 }
         static var verticalInset: CGFloat { 100 }

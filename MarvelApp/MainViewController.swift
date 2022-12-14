@@ -181,7 +181,7 @@ extension MainViewController: UICollectionViewDataSource {
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailViewController = DetailViewController()
+        let detailViewController = DetailsHeroViewController()
         detailViewController.viewModel = viewModel?.detailViewModel(index: indexPath.row)
         detailViewController.transitioningDelegate = self
         detailViewController.modalPresentationStyle = .custom

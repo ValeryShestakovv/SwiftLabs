@@ -1,6 +1,6 @@
 import Foundation
 
-class GalleryCellViewModal {
+final class GalleryCellViewModal {
     var imageData: NSData
     let imageString: String
     let nameString: String
