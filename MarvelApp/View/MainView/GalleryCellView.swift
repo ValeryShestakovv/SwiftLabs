@@ -18,11 +18,11 @@ final class GalleryCellView: UICollectionViewCell {
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
         return text
     }()
-    weak var viewModel: GalleryCellViewModal! {
+    weak var viewModel: GalleryCellViewModal? {
         didSet {
-            self.imageView.image = UIImage(data: Data(referencing: viewModel.imageData))
-            self.nameLabel.text = viewModel.nameString
-            viewModel.downloadImage { imageData in
+            self.imageView.image = UIImage(data: Data(referencing: viewModel?.imageData ?? NSData()))
+            self.nameLabel.text = viewModel?.nameString
+            viewModel?.downloadImage { imageData in
                 self.imageView.image = UIImage(data: Data(referencing: imageData))
             }
         }

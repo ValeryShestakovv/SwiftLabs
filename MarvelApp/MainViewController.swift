@@ -42,9 +42,9 @@ final class MainViewController: UIViewController {
     }()
     private var horisontalGallaryConstraint: Constraint?
     private var activityView = UIView()
-    weak var viewModel: MainViewModel! {
+    weak var viewModel: MainViewModel? {
         didSet {
-            viewModel.getListHeroes {
+            viewModel?.getListHeroes {
                 DispatchQueue.main.async {
                     self.galleryCollectionView.reloadData()
                     self.removeSpinner()
@@ -63,12 +63,12 @@ final class MainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         createSpinnerView()
-        if viewModel.connectedToNetwork == true {
+        if viewModel?.connectedToNetwork == true {
             showSpinner()
         }
     }
     @objc func refresh(sender: UIRefreshControl) {
-        viewModel.refreshListHeroes {
+        viewModel?.refreshListHeroes {
             DispatchQueue.main.async {
                 self.galleryCollectionView.reloadData()
             }
@@ -160,21 +160,21 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 
 extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.viewModel.numberOfHeroes()
+        return self.viewModel?.numberOfHeroes() ?? 0
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCellView.reuseId,
             for: indexPath) as? GalleryCellView else { return .init() }
-        cell.viewModel = self.viewModel.cellViewModel(index: indexPath.row)
-        cell.viewModel.mainViewModel = self.viewModel
+        cell.viewModel = self.viewModel?.cellViewModel(index: indexPath.row)
+        cell.viewModel?.mainViewModel = self.viewModel
         return cell
     }
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        self.viewModel.getAddListHeroes(indexHero: indexPath.row) {
+        self.viewModel?.getAddListHeroes(indexHero: indexPath.row) {
             DispatchQueue.main.async {
                 self.galleryCollectionView.reloadData()
             }
@@ -182,7 +182,7 @@ extension MainViewController: UICollectionViewDataSource {
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
-        detailViewController.viewModel = viewModel.detailViewModel(index: indexPath.row)
+        detailViewController.viewModel = viewModel?.detailViewModel(index: indexPath.row)
         detailViewController.transitioningDelegate = self
         detailViewController.modalPresentationStyle = .custom
         present(detailViewController, animated: true)
