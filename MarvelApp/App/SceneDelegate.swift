@@ -10,7 +10,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        let viewController = ViewController()
+        let viewController = MainViewController()
         self.mainViewModel = MainViewModel()
         viewController.viewModel = mainViewModel
         let navigationController = UINavigationController(rootViewController: viewController)

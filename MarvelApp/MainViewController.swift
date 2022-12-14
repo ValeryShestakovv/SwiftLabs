@@ -2,7 +2,7 @@ import SnapKit
 import UIKit
 import AnimatedCollectionViewLayout
 
-final class ViewController: UIViewController {
+final class MainViewController: UIViewController {
     private let logoView: UIImageView = {
         let logo = UIImageView()
         logo.image = UIImage(named: "logo")
@@ -24,8 +24,8 @@ final class ViewController: UIViewController {
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .none
-        collectionView.register(GalleryCollectionViewCell.self,
-                                forCellWithReuseIdentifier: GalleryCollectionViewCell.reuseId)
+        collectionView.register(GalleryCellView.self,
+                                forCellWithReuseIdentifier: GalleryCellView.reuseId)
         collectionView.contentInset = UIEdgeInsets(top: 0, left: Layout.leftDistanceToView,
                                                    bottom: 0, right: Layout.rightDistanceToView)
         collectionView.showsHorizontalScrollIndicator = false
@@ -134,7 +134,7 @@ final class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
+extension MainViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView is UICollectionView else {
             return
@@ -144,8 +144,8 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         guard
             let indexPath = galleryCollectionView.indexPathForItem(at: centerPoint),
             let cell = galleryCollectionView.dequeueReusableCell(
-                withReuseIdentifier: GalleryCollectionViewCell.reuseId,
-                for: indexPath) as? GalleryCollectionViewCell,
+                withReuseIdentifier: GalleryCellView.reuseId,
+                for: indexPath) as? GalleryCellView,
             let color = cell.imageView.image?.averageColor else {
                 return
             }
@@ -158,15 +158,15 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension ViewController: UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.viewModel.numberOfHeroes()
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: GalleryCollectionViewCell.reuseId,
-            for: indexPath) as? GalleryCollectionViewCell else { return .init() }
+            withReuseIdentifier: GalleryCellView.reuseId,
+            for: indexPath) as? GalleryCellView else { return .init() }
         cell.viewModel = self.viewModel.cellViewModel(index: indexPath.row)
         cell.viewModel.mainViewModel = self.viewModel
         return cell
@@ -189,14 +189,14 @@ extension ViewController: UICollectionViewDataSource {
     }
 }
 
-extension ViewController: UIViewControllerTransitioningDelegate {
+extension MainViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard
             let selectedIndexPathCell = galleryCollectionView.indexPathsForSelectedItems,
             let selectedCell = galleryCollectionView.cellForItem(at: (selectedIndexPathCell.first)!) as?
-                GalleryCollectionViewCell,
+                GalleryCellView,
             let selectedCellSuperview = selectedCell.superview
         else {
             return nil
@@ -209,7 +209,7 @@ extension ViewController: UIViewControllerTransitioningDelegate {
         guard
             let selectedIndexPathCell = galleryCollectionView.indexPathsForSelectedItems,
             let selectedCell = galleryCollectionView.cellForItem(at: (selectedIndexPathCell.first!)) as?
-                GalleryCollectionViewCell,
+                GalleryCellView,
             let selectedCellSuperview = selectedCell.superview
         else {
             return nil
@@ -221,7 +221,7 @@ extension ViewController: UIViewControllerTransitioningDelegate {
 
 // MARK: Layout Guides
 
-extension ViewController {
+extension MainViewController {
     enum Layout {
         static var horizontalTextInset: CGFloat { 65 }
         static var horizontalInset: CGFloat { 90 }

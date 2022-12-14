@@ -2,7 +2,7 @@ import Foundation
 import SnapKit
 import UIKit
 
-final class GalleryCollectionViewCell: UICollectionViewCell {
+final class GalleryCellView: UICollectionViewCell {
     static let reuseId = "GalleryCollectionViewCell"
     var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -11,7 +11,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         imageView.layer.masksToBounds = true
         return imageView
     }()
-    let nameLable: UILabel = {
+    let nameLabel: UILabel = {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         text.textColor = .white
@@ -21,7 +21,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     weak var viewModel: GalleryCellViewModal! {
         didSet {
             self.imageView.image = UIImage(data: Data(referencing: viewModel.imageData))
-            self.nameLable.text = viewModel.nameString
+            self.nameLabel.text = viewModel.nameString
             viewModel.downloadImage { imageData in
                 self.imageView.image = UIImage(data: Data(referencing: imageData))
             }
@@ -39,8 +39,8 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         }
     }
     private func setupNameLayout() {
-        addSubview(nameLable)
-        nameLable.snp.makeConstraints { make in
+        addSubview(nameLabel)
+        nameLabel.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(40)
             make.left.right.bottom.equalToSuperview().inset(40)
         }

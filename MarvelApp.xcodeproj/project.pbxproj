@@ -12,10 +12,10 @@
 		6348B131292A89AC00648FE1 /* HeroModelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6348B130292A89AC00648FE1 /* HeroModelDB.swift */; };
 		637CE13928F2FB7A00CDD3B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CE13828F2FB7A00CDD3B9 /* AppDelegate.swift */; };
 		637CE13B28F2FB7A00CDD3B9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CE13A28F2FB7A00CDD3B9 /* SceneDelegate.swift */; };
-		637CE13D28F2FB7A00CDD3B9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CE13C28F2FB7A00CDD3B9 /* ViewController.swift */; };
+		637CE13D28F2FB7A00CDD3B9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CE13C28F2FB7A00CDD3B9 /* MainViewController.swift */; };
 		637CE14228F2FB7D00CDD3B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 637CE14128F2FB7D00CDD3B9 /* Assets.xcassets */; };
 		637CE14528F2FB7D00CDD3B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 637CE14328F2FB7D00CDD3B9 /* LaunchScreen.storyboard */; };
-		63A1D74328F467AE00FA6696 /* GalleryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1D74228F467AE00FA6696 /* GalleryCollectionViewCell.swift */; };
+		63A1D74328F467AE00FA6696 /* GalleryCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1D74228F467AE00FA6696 /* GalleryCellView.swift */; };
 		63A1D74C28F56E6F00FA6696 /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1D74B28F56E6F00FA6696 /* TriangleView.swift */; };
 		63B7FD1828F457C700092C40 /* HeroModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B7FD1728F457C700092C40 /* HeroModel.swift */; };
 		63C1E331290A942200F4AAF4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C1E330290A942200F4AAF4 /* DetailViewController.swift */; };
@@ -57,13 +57,13 @@
 		637CE13528F2FB7A00CDD3B9 /* MarvelApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarvelApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		637CE13828F2FB7A00CDD3B9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		637CE13A28F2FB7A00CDD3B9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		637CE13C28F2FB7A00CDD3B9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ../../ViewController.swift; sourceTree = "<group>"; };
+		637CE13C28F2FB7A00CDD3B9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = ../../MainViewController.swift; sourceTree = "<group>"; };
 		637CE14128F2FB7D00CDD3B9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		637CE14428F2FB7D00CDD3B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		637CE14628F2FB7D00CDD3B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		637CE14B28F2FB7D00CDD3B9 /* MarvelAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarvelAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		637CE15528F2FB7D00CDD3B9 /* MarvelAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarvelAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		63A1D74228F467AE00FA6696 /* GalleryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewCell.swift; sourceTree = "<group>"; };
+		63A1D74228F467AE00FA6696 /* GalleryCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCellView.swift; sourceTree = "<group>"; };
 		63A1D74B28F56E6F00FA6696 /* TriangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
 		63B7FD1728F457C700092C40 /* HeroModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroModel.swift; sourceTree = "<group>"; };
 		63C1E330290A942200F4AAF4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -246,8 +246,8 @@
 		63F0B047293F657400CC8FDF /* MainView */ = {
 			isa = PBXGroup;
 			children = (
-				637CE13C28F2FB7A00CDD3B9 /* ViewController.swift */,
-				63A1D74228F467AE00FA6696 /* GalleryCollectionViewCell.swift */,
+				637CE13C28F2FB7A00CDD3B9 /* MainViewController.swift */,
+				63A1D74228F467AE00FA6696 /* GalleryCellView.swift */,
 				63A1D74B28F56E6F00FA6696 /* TriangleView.swift */,
 			);
 			path = MainView;
@@ -468,8 +468,8 @@
 				63F0B043293F653C00CC8FDF /* GalleryCellViewModal.swift in Sources */,
 				6348B131292A89AC00648FE1 /* HeroModelDB.swift in Sources */,
 				63A1D74C28F56E6F00FA6696 /* TriangleView.swift in Sources */,
-				637CE13D28F2FB7A00CDD3B9 /* ViewController.swift in Sources */,
-				63A1D74328F467AE00FA6696 /* GalleryCollectionViewCell.swift in Sources */,
+				637CE13D28F2FB7A00CDD3B9 /* MainViewController.swift in Sources */,
+				63A1D74328F467AE00FA6696 /* GalleryCellView.swift in Sources */,
 				63B7FD1828F457C700092C40 /* HeroModel.swift in Sources */,
 				63D7D07A29113DA600FE0888 /* Service.swift in Sources */,
 				63D7D0832911A34600FE0888 /* Date + Timestamp.swift in Sources */,
