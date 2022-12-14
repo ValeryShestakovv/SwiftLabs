@@ -6,7 +6,7 @@ final class MainViewModel {
     private var totalHeroes: Int?
     private let service = ServiceImp()
     let database = DBManager.realm()
-    lazy var listHeroesDB: Results<HeroModelDB> = DBManager.getAllObjects(realm: database!)
+    lazy var listHeroesDB: [HeroModel] = DBManager.getAllHeroes(realm: database!)
     var connectedToNetwork: Bool {
         if TestInternetConnection.connectedToNetwork() == true {
             return true
@@ -45,7 +45,7 @@ final class MainViewModel {
     func getCurrentHeroModal(index: Int) -> HeroModel {
         return listHeroes[index]
     }
-    func getCurrentHeroModalDB(index: Int) -> HeroModelDB {
+    func getCurrentHeroModalDB(index: Int) -> HeroModel {
         return listHeroesDB[index]
     }
     func cellViewModel(index: Int) -> GalleryCellViewModal {
@@ -62,7 +62,7 @@ final class MainViewModel {
             return DetailsHeroViewModal(hero: listHeroesDB[index])
         }
     }
-    func addHeroToDB(hero: HeroModelDB) {
-        DBManager.addObjectDB(realm: self.database, hero: hero)
+    func addHeroToDB(hero: HeroModel) {
+        DBManager.addHeroDB(realm: self.database, hero: hero)
     }
 }

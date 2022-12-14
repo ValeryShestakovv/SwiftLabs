@@ -1,11 +1,7 @@
 import Foundation
 
 final class DetailsHeroViewModal {
-    var imageData: NSData
-    let imageString: String
-    let nameString: String
-    let discriptionString: String
-    let id: Int
+    var hero: HeroModel
     private let service = ServiceImp()
     var connectedToNetwork: Bool {
         if TestInternetConnection.connectedToNetwork() == true {
@@ -15,26 +11,15 @@ final class DetailsHeroViewModal {
         }
     }
     required init(hero: HeroModel) {
-        self.imageData = NSData()
-        self.imageString = hero.imageStr
-        self.nameString = hero.name
-        self.discriptionString = hero.details
-        self.id = hero.id
-    }
-    required init(hero: HeroModelDB) {
-        self.imageData = hero.image
-        self.imageString = ""
-        self.nameString = hero.name
-        self.discriptionString = hero.discription
-        self.id = Int(hero.idHero)!
+        self.hero = hero
     }
     func downloadDetail(complition: @escaping(HeroModel) -> Void) {
-        service.getDetailsHero(idHero: self.id) { result in
+        service.getDetailsHero(idHero: self.hero.id) { result in
             complition(result)
         }
     }
     func downloadImage(complition:@escaping (NSData) -> Void) {
-        service.getImage(strURL: self.imageString) { result in
+        service.getImage(strURL: self.hero.imageStr) { result in
             complition(result)
         }
     }

@@ -1,34 +1,23 @@
 import Foundation
 
 final class GalleryCellViewModal {
-    var imageData: NSData
-    let imageString: String
-    let nameString: String
-    let discriptionString: String
-    let id: Int
+    var hero: HeroModel
     private let service = ServiceImp()
-    weak var mainViewModel: MainViewModel!
-    required init(hero: HeroModel) {
-        self.imageData = NSData()
-        self.imageString = hero.imageStr
-        self.nameString = hero.name
-        self.discriptionString = hero.details
-        self.id = hero.id
+    weak var mainViewModel: MainViewModel?
+    var connectedToNetwork: Bool {
+        if TestInternetConnection.connectedToNetwork() == true {
+            return true
+        } else {
+            return false
+        }
     }
-    required init(hero: HeroModelDB) {
-        self.imageData = hero.image
-        self.imageString = ""
-        self.nameString = hero.name
-        self.discriptionString = hero.discription
-        self.id = Int(hero.idHero)!
+    required init(hero: HeroModel) {
+        self.hero = hero
     }
     func downloadImage(complition:@escaping (NSData) -> Void) {
-        service.getImage(strURL: self.imageString) { result in
-            let heroModel = HeroModelDB(name: self.nameString,
-                                        discription: self.discriptionString,
-                                        image: result,
-                                        idHero: self.id)
-            self.mainViewModel.addHeroToDB(hero: heroModel)
+        service.getImage(strURL: self.hero.imageStr) { result in
+            self.hero.imageData = result
+            self.mainViewModel?.addHeroToDB(hero: self.hero)
             complition(result)
         }
     }

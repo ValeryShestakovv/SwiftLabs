@@ -29,17 +29,17 @@ final class DetailsHeroViewController: UIViewController {
     }()
     private var topNameLableConstraint: Constraint?
     private let effect = UIVisualEffectView()
-    weak var viewModel: DetailsHeroViewModal! {
+    weak var viewModel: DetailsHeroViewModal? {
         didSet {
-            self.imageView.image = UIImage(data: Data(referencing: viewModel.imageData))
-            self.nameLable.text = viewModel.nameString
-            self.detailLable.text = viewModel.discriptionString
-            if viewModel.connectedToNetwork == true {
-                viewModel.downloadDetail { hero in
+            self.imageView.image = UIImage(data: Data(referencing: viewModel?.hero.imageData ?? NSData()))
+            self.nameLable.text = viewModel?.hero.name
+            self.detailLable.text = viewModel?.hero.details
+            if viewModel?.connectedToNetwork == true {
+                viewModel?.downloadDetail { hero in
                     self.nameLable.text = hero.name
                     self.detailLable.text = hero.details
                 }
-                viewModel.downloadImage { imageData in
+                viewModel?.downloadImage { imageData in
                     self.imageView.image = UIImage(data: Data(referencing: imageData))
                 }
             }

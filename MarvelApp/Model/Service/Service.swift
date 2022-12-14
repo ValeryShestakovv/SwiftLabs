@@ -71,6 +71,7 @@ extension HeroModel {
         self.init(
             id: dtoHero.id ?? 0,
             imageStr: dtoHero.thumbnail?.imagePath ?? "",
+            imageData: NSData(),
             name: dtoHero.name ?? "",
             details: dtoHero.description ?? ""
         )

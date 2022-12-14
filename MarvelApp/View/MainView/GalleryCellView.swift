@@ -20,10 +20,12 @@ final class GalleryCellView: UICollectionViewCell {
     }()
     weak var viewModel: GalleryCellViewModal? {
         didSet {
-            self.imageView.image = UIImage(data: Data(referencing: viewModel?.imageData ?? NSData()))
-            self.nameLabel.text = viewModel?.nameString
-            viewModel?.downloadImage { imageData in
-                self.imageView.image = UIImage(data: Data(referencing: imageData))
+            self.imageView.image = UIImage(data: Data(referencing: viewModel?.hero.imageData ?? NSData()))
+            self.nameLabel.text = viewModel?.hero.name
+            if viewModel?.connectedToNetwork == true {
+                viewModel?.downloadImage { imageData in
+                    self.imageView.image = UIImage(data: Data(referencing: imageData))
+                }
             }
         }
     }
