@@ -1,11 +1,9 @@
 import Foundation
-import AlamofireImage
 
 final class GalleryCellViewModal {
     var hero: HeroModel
     private let service = ServiceImp()
     weak var mainViewModel: MainViewModel?
-    let imageCache = AutoPurgingImageCache()
     var connectedToNetwork: Bool {
         if TestInternetConnection.connectedToNetwork() == true {
             return true
@@ -19,7 +17,6 @@ final class GalleryCellViewModal {
     func downloadImage(complition:@escaping (Result<NSData, Error>) -> Void) {
         service.getImage(strURL: self.hero.imageStr) { [weak self] result in
             if result != nil {
-                self?.hero.imageData = result
                 self?.mainViewModel?.addHeroToDB(hero: self!.hero)
                 complition(.success(result))
             } else {
