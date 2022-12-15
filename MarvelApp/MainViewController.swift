@@ -44,6 +44,7 @@ final class MainViewController: UIViewController {
     private var activityView = UIView()
     weak var viewModel: MainViewModel? {
         didSet {
+            showSpinner()
             viewModel?.getListHeroes {
                 DispatchQueue.main.async {
                     self.galleryCollectionView.reloadData()
@@ -59,21 +60,15 @@ final class MainViewController: UIViewController {
         setupLogoLayout()
         setupLabelLayout()
         setupGalleryLayout()
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         createSpinnerView()
-        if viewModel?.connectedToNetwork == true {
-            showSpinner()
-        }
     }
     @objc func refresh(sender: UIRefreshControl) {
         viewModel?.refreshListHeroes {
             DispatchQueue.main.async {
                 self.galleryCollectionView.reloadData()
+                sender.endRefreshing()
             }
         }
-        sender.endRefreshing()
     }
     private func createSpinnerView() {
         activityView = UIView(frame: view.bounds)
