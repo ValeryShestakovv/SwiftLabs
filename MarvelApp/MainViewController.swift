@@ -47,6 +47,7 @@ final class MainViewController: UIViewController {
         activityIndicator.color = .red
         activityIndicator.center = view.center
         activityIndicator.startAnimating()
+        activityIndicator.style = .large
         let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
 
         view.addSubview(blurEffect)
@@ -252,7 +253,7 @@ extension MainViewController: UIViewControllerTransitioningDelegate {
 
 extension MainViewController {
     enum Layout {
-        static var horizontalTextInset: CGFloat { 65 }
+        static var horizontalTextInset: CGFloat { 85 }
         static var horizontalInset: CGFloat { 90 }
         static var verticalInset: CGFloat { 80 }
         static var leftDistanceToView: CGFloat { 0 }

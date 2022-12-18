@@ -121,7 +121,7 @@ final class DetailsHeroViewController: UIViewController {
 
 extension DetailsHeroViewController {
     enum Layout {
-        static var horizontalInset: CGFloat { 35 }
+        static var horizontalInset: CGFloat { 50 }
         static var verticalInset: CGFloat { 100 }
     }
 }

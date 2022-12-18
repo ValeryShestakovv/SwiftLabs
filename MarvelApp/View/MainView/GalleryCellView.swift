@@ -19,16 +19,57 @@ final class GalleryCellView: UICollectionViewCell {
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
         return text
     }()
+    private let activityView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 16
+        view.layer.masksToBounds = true
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.color = .red
+        activityIndicator.center = view.center
+        activityIndicator.startAnimating()
+        activityIndicator.style = .large
+        let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+
+        view.addSubview(blurEffect)
+        view.addSubview(activityIndicator)
+        blurEffect.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        return view
+    }()
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupImageLayout()
         setupNameLayout()
+        setupActivityLayout()
+        showSpinner()
+    }
+    private func setupActivityLayout() {
+        addSubview(activityView)
+        activityView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        activityView.alpha = 0
+    }
+    private func showSpinner() {
+        UIView.animate(withDuration: 0.5) {
+            self.activityView.alpha = 1
+        }
+    }
+    private func removeSpinner() {
+        UIView.animate(withDuration: 0.5) {
+            self.activityView.alpha = 0
+        }
     }
     func setupHero(_ hero: HeroModel, complition: @escaping(HeroModel) -> Void) {
         nameLabel.text = hero.name
         guard let imageURL = URL(string: hero.imageStr) else {return}
         let resource = ImageResource(downloadURL: imageURL)
         imageView.kf.setImage(with: resource, placeholder: UIImage(named: "placeholder")) { _ in
+            self.removeSpinner()
             guard let image = self.imageView.image else {return}
             let heroDB = HeroModel(id: hero.id,
                                    imageStr: hero.imageStr,

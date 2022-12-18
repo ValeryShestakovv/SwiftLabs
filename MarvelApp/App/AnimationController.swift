@@ -79,7 +79,7 @@ extension AnimationController: UIViewControllerAnimatedTransitioning {
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration,
                        delay: 0,
-                       usingSpringWithDamping: 0.8,
+                       usingSpringWithDamping: 1,
                        initialSpringVelocity: 0.1,
                        options: .curveEaseIn) {
             viewToAnimate.transform = scale
