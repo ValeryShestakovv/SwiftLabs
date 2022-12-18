@@ -5,10 +5,15 @@ import RealmSwift
 public class DBManager {
     static func realm() -> Realm? {
         do {
+            let config = Realm.Configuration(
+              schemaVersion: 0,
+              deleteRealmIfMigrationNeeded: true
+            )
+            Realm.Configuration.defaultConfiguration = config
             let realm = try Realm()
             return realm
-        } catch {
-            // LOG ERROR
+        } catch let error {
+            print("Could not access database: ", error)
             return nil
         }
     }
@@ -26,7 +31,7 @@ public class DBManager {
     }
     static func addHeroDB(realm: Realm?, hero: HeroModel) {
         do {
-            let heroDB = HeroModelDB(dtoHeroModal: hero)
+            let heroDB = HeroModelDB(dtoHeroModel: hero)
             try realm?.write {
                 realm?.add(heroDB, update: .modified)
             }
@@ -38,31 +43,31 @@ public class DBManager {
         let objects = realm.objects(HeroModelDB.self)
         var listHero: [HeroModel] = []
         objects.forEach { heroDB in
-            let hero = HeroModel(dtoHeroDB: heroDB)
+            let hero = HeroModel(dtoHeroModelDB: heroDB)
             listHero.append(hero)
         }
         return listHero
     }
 }
 extension HeroModelDB {
-    convenience init(dtoHeroModal: HeroModel) {
+    convenience init(dtoHeroModel: HeroModel) {
         self.init(
-            name: dtoHeroModal.name,
-            details: dtoHeroModal.details,
-            imageData: dtoHeroModal.imageData,
-            imageStr: dtoHeroModal.imageStr,
-            idHero: dtoHeroModal.id
+            name: dtoHeroModel.name,
+            details: dtoHeroModel.details,
+            imageData: NSData(data: dtoHeroModel.image.jpegData(compressionQuality: 1) ?? Data()),
+            imageStr: dtoHeroModel.imageStr,
+            idHero: dtoHeroModel.id
         )
     }
 }
 extension HeroModel {
-    init(dtoHeroDB: HeroModelDB) {
+    init(dtoHeroModelDB: HeroModelDB) {
         self.init(
-            id: dtoHeroDB.idHero,
-            imageStr: dtoHeroDB.imageStr,
-            imageData: dtoHeroDB.imageData,
-            name: dtoHeroDB.name,
-            details: dtoHeroDB.details
+            id: dtoHeroModelDB.idHero,
+            imageStr: dtoHeroModelDB.imageStr,
+            image: UIImage(data: dtoHeroModelDB.imageData as Data) ?? UIImage(),
+            name: dtoHeroModelDB.name,
+            details: dtoHeroModelDB.details
         )
     }
 }

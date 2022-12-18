@@ -26,7 +26,9 @@ struct HeroPayload: Decodable {
 
 struct ThumbnailPayload: Decodable {
     let imagePath: String?
+    let imageExtension: String?
     enum CodingKeys: String, CodingKey {
         case imagePath = "path"
+        case imageExtension = "extension"
     }
 }

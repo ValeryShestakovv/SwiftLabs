@@ -1,5 +1,6 @@
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class DetailsHeroViewController: UIViewController {
     private let backButton: UIButton = {
@@ -20,52 +21,34 @@ final class DetailsHeroViewController: UIViewController {
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
         return text
     }()
-    let detailLable: UILabel = {
-        let text = UILabel()
-        text.textColor = .white
-        text.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
-        text.numberOfLines = 0
-        return text
+    let detailView: UITextView = {
+        let textView = UITextView()
+        textView.textColor = .white
+        textView.backgroundColor = .none
+        textView.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
+        textView.isEditable = false
+        textView.isSelectable = false
+        return textView
     }()
     private var topNameLableConstraint: Constraint?
     private let effect = UIVisualEffectView()
-    weak var viewModel: DetailsHeroViewModal? {
-        didSet {
-            self.imageView.image = UIImage(data: Data(referencing: viewModel?.hero.imageData ?? NSData()))
-            self.nameLable.text = viewModel?.hero.name
-            self.detailLable.text = viewModel?.hero.details
-            if viewModel?.connectedToNetwork == true {
-                viewModel?.downloadDetail { [weak self] result in
-                    guard let self = self else {return}
-                    switch result {
-                    case .success(let hero):
-                        self.nameLable.text = hero.name
-                        self.detailLable.text = hero.details
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                }
-                viewModel?.downloadImage { [weak self] result in
-                    guard let self = self else {return}
-                    switch result {
-                    case .success(let imageData):
-                        self.imageView.image = UIImage(data: Data(referencing: imageData))
-                    case .failure(let error):
-                        self.imageView.image = UIImage(named: "placeholder")
-                        print(error.localizedDescription)
-                    }
-                }
-            }
-        }
+    var viewModel: DetailsHeroViewModal
+
+    init(viewModel: DetailsHeroViewModal) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageLayout()
         view.addSubview(effect)
         setupButtonLayout()
-        backButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
         setupNameLayout()
         setupDetailLayout()
+        backButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -77,12 +60,30 @@ final class DetailsHeroViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
+    func setupHero(complition: @escaping() -> Void) {
+        viewModel.downloadDetails { [weak self] result in
+            guard let self = self else {return}
+            self.nameLable.text = result.name
+            self.detailView.text = result.details
+            guard let imageURL = URL(string: result.imageStr) else {return}
+            let resource = ImageResource(downloadURL: imageURL)
+            self.imageView.kf.setImage(with: resource, placeholder: UIImage(named: "placeholder")) { _ in
+                complition()
+            }
+        }
+    }
+    func setupHeroDB() {
+        nameLable.text = viewModel.hero.name
+        detailView.text = viewModel.hero.details
+        imageView.image = viewModel.hero.image
+    }
     @objc func onButtonTap() {
         self.dismiss(animated: true)
         topNameLableConstraint?.update(inset: 40)
         backButton.alpha = 0
         UIView.animate(withDuration: 0.5) {
             self.effect.effect = nil
+            self.detailView.alpha = 0
             self.view.layoutIfNeeded()
         }
     }
@@ -107,8 +108,8 @@ final class DetailsHeroViewController: UIViewController {
         }
     }
     private func setupDetailLayout() {
-        view.addSubview(detailLable)
-        detailLable.snp.makeConstraints { make in
+        view.addSubview(detailView)
+        detailView.snp.makeConstraints { make in
             make.top.equalTo(nameLable.snp.bottom).offset(40)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
             make.bottom.equalToSuperview().inset(Layout.horizontalInset)
@@ -120,7 +121,7 @@ final class DetailsHeroViewController: UIViewController {
 
 extension DetailsHeroViewController {
     enum Layout {
-        static var horizontalInset: CGFloat { 50 }
+        static var horizontalInset: CGFloat { 35 }
         static var verticalInset: CGFloat { 100 }
     }
 }

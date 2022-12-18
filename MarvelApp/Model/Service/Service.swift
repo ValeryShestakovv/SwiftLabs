@@ -28,12 +28,17 @@ final class ServiceImp: ServiceProtocol {
                    parameters: getParams(offset: 0, limit: 1),
                    encoder: URLEncodedFormParameterEncoder(destination: .queryString))
         .responseDecodable(of: HeroListUpruvPayload.self) { response in
-            guard let heroPayload = response.value?.data?.results?[0] else {
-                completion(.stub)
-                return
+            switch response.result {
+            case .success(let value):
+                guard let heroPayload = value.data?.results?[0] else {
+                    completion(.stub)
+                    return
+                }
+                let heroModel = HeroModel(dtoHero: heroPayload)
+                completion(heroModel)
+            case .failure(let error):
+                print("Error while request details hero: \(error)")
             }
-            let heroModel = HeroModel(dtoHero: heroPayload)
-            completion(heroModel)
         }
     }
     func getListHeroes(offset: Int, limit: Int, completion: @escaping ([HeroModel], Int) -> Void) {
@@ -42,26 +47,23 @@ final class ServiceImp: ServiceProtocol {
                     parameters: getParams(offset: offset, limit: limit),
                     encoder: URLEncodedFormParameterEncoder(destination: .queryString))
         .responseDecodable(of: HeroListUpruvPayload.self) {response in
-            guard let heroPayload = response.value?.data?.results,
-                  let totalHeroes = response.value?.data?.total else {
-                completion([], 0)
-                return
-            }
-            var heroIdList = [HeroModel]()
-            for index in 0...heroPayload.count-1 {
-                guard heroPayload[index].id != nil else {
-                    continue
+            switch response.result {
+            case .success(let value):
+                guard let heroPayload = value.data?.results,
+                      let totalHeroes = value.data?.total else {
+                    completion([], 0)
+                    return
                 }
-                heroIdList.append(HeroModel(dtoHero: heroPayload[index]))
-            }
-            completion(heroIdList, totalHeroes)
-        }
-    }
-    func getImage(strURL: String, complition: @escaping (NSData) -> Void) {
-        AF.request(strURL + ".jpg").responseImage { response in
-            if case .success(let image) = response.result {
-                let imageData = NSData(data: (image.jpegData(compressionQuality: 1) ?? Data()))
-                complition(imageData)
+                var heroIdList = [HeroModel]()
+                for index in 0...heroPayload.count-1 {
+                    guard heroPayload[index].id != nil else {
+                        continue
+                    }
+                    heroIdList.append(HeroModel(dtoHero: heroPayload[index]))
+                }
+                completion(heroIdList, totalHeroes)
+            case .failure(let error):
+                print("Error while request list heroes: \(error)")
             }
         }
     }
@@ -70,8 +72,8 @@ extension HeroModel {
     init(dtoHero: HeroPayload) {
         self.init(
             id: dtoHero.id ?? 0,
-            imageStr: dtoHero.thumbnail?.imagePath ?? "",
-            imageData: NSData(),
+            imageStr: (dtoHero.thumbnail?.imagePath ?? "") + "." + (dtoHero.thumbnail?.imageExtension ?? ""),
+            image: UIImage(),
             name: dtoHero.name ?? "",
             details: dtoHero.description ?? ""
         )

@@ -1,6 +1,7 @@
 import Foundation
 import SnapKit
 import UIKit
+import Kingfisher
 
 final class GalleryCellView: UICollectionViewCell {
     static let reuseId = "GalleryCollectionViewCell"
@@ -11,34 +12,35 @@ final class GalleryCellView: UICollectionViewCell {
         imageView.layer.masksToBounds = true
         return imageView
     }()
-    let nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         text.textColor = .white
         text.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
         return text
     }()
-    weak var viewModel: GalleryCellViewModal? {
-        didSet {
-            self.nameLabel.text = viewModel?.hero.name
-            if viewModel?.connectedToNetwork == true {
-                viewModel?.downloadImage { [weak self] result in
-                    guard let self = self else {return}
-                    switch result {
-                    case .success(let imageData):
-                        self.imageView.image = UIImage(data: Data(referencing: imageData))
-                    case .failure(let error):
-                        self.imageView.image = UIImage(named: "placeholder")
-                        print(error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupImageLayout()
         setupNameLayout()
+    }
+    func setupHero(_ hero: HeroModel, complition: @escaping(HeroModel) -> Void) {
+        nameLabel.text = hero.name
+        guard let imageURL = URL(string: hero.imageStr) else {return}
+        let resource = ImageResource(downloadURL: imageURL)
+        imageView.kf.setImage(with: resource, placeholder: UIImage(named: "placeholder")) { _ in
+            guard let image = self.imageView.image else {return}
+            let heroDB = HeroModel(id: hero.id,
+                                   imageStr: hero.imageStr,
+                                   image: image,
+                                   name: hero.name,
+                                   details: hero.details)
+            complition(heroDB)
+        }
+    }
+    func setupHeroDB( _ hero: HeroModel) {
+        nameLabel.text = hero.name
+        imageView.image = hero.image
     }
     private func setupImageLayout() {
         addSubview(imageView)

@@ -41,18 +41,25 @@ final class MainViewController: UIViewController {
         return collectionView
     }()
     private var horisontalGallaryConstraint: Constraint?
-    private var activityView = UIView()
-    weak var viewModel: MainViewModel? {
-        didSet {
-            showSpinner()
-            viewModel?.getListHeroes {
-                DispatchQueue.main.async {
-                    self.galleryCollectionView.reloadData()
-                    self.removeSpinner()
-                }
-            }
+    private let activityView: UIView = {
+        let view = UIView()
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.color = .red
+        activityIndicator.center = view.center
+        activityIndicator.startAnimating()
+        let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+
+        view.addSubview(blurEffect)
+        view.addSubview(activityIndicator)
+        blurEffect.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
-    }
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        return view
+    }()
+    let viewModel: MainViewModel
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
@@ -60,28 +67,39 @@ final class MainViewController: UIViewController {
         setupLogoLayout()
         setupLabelLayout()
         setupGalleryLayout()
-        createSpinnerView()
+        setupActivityLayout()
+        loadHeroes()
+    }
+    init(viewModel: MainViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     @objc func refresh(sender: UIRefreshControl) {
-        viewModel?.refreshListHeroes {
+        viewModel.refreshListHeroes {
             DispatchQueue.main.async {
                 self.galleryCollectionView.reloadData()
                 sender.endRefreshing()
             }
         }
     }
-    private func createSpinnerView() {
-        activityView = UIView(frame: view.bounds)
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.color = .red
-        activityIndicator.center = view.center
-        activityIndicator.startAnimating()
-        let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        blurEffect.frame = view.frame
-        activityView.addSubview(blurEffect)
-        activityView.addSubview(activityIndicator)
-        activityView.alpha = 0
+    private func loadHeroes() {
+        showSpinner()
+        viewModel.getListHeroes {
+            DispatchQueue.main.async {
+                self.galleryCollectionView.reloadData()
+                self.removeSpinner()
+            }
+        }
+    }
+    private func setupActivityLayout() {
         view.addSubview(activityView)
+        activityView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        activityView.alpha = 0
     }
     private func showSpinner() {
         UIView.animate(withDuration: 0.5) {
@@ -89,7 +107,6 @@ final class MainViewController: UIViewController {
         }
     }
     private func removeSpinner() {
-        activityView.alpha = 1
         horisontalGallaryConstraint?.update(inset: 0)
         UIView.animate(withDuration: 0.5) {
             self.activityView.alpha = 0
@@ -155,32 +172,49 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 
 extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.viewModel?.numberOfHeroes() ?? 0
+        return self.viewModel.numberOfHeroes()
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCellView.reuseId,
             for: indexPath) as? GalleryCellView else { return .init() }
-        cell.viewModel = self.viewModel?.cellViewModel(index: indexPath.row)
-        cell.viewModel?.mainViewModel = self.viewModel
+        let currentHero = self.viewModel.getCurrentHeroModal(index: indexPath.row)
+        if viewModel.connectedToNetwork == true {
+            cell.setupHero(currentHero) { [weak self] result in
+                guard let self = self else {return}
+                self.viewModel.addHeroToDB(hero: result)
+            }
+        } else {
+            cell.setupHeroDB(currentHero)
+        }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        self.viewModel?.getAddListHeroes(indexHero: indexPath.row) {
-            DispatchQueue.main.async {
-                self.galleryCollectionView.reloadData()
+        if viewModel.connectedToNetwork == true {
+            self.viewModel.getAddListHeroes(indexHero: indexPath.row) {
+                DispatchQueue.main.async {
+                    self.galleryCollectionView.reloadData()
+                }
             }
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailViewController = DetailsHeroViewController()
-        detailViewController.viewModel = viewModel?.detailViewModel(index: indexPath.row)
+        let currentHero = viewModel.getCurrentHeroModal(index: indexPath.row)
+        let detailViewModel = DetailsHeroViewModal(hero: currentHero)
+        let detailViewController = DetailsHeroViewController(viewModel: detailViewModel)
         detailViewController.transitioningDelegate = self
         detailViewController.modalPresentationStyle = .custom
-        present(detailViewController, animated: true)
+        if viewModel.connectedToNetwork == true {
+            detailViewController.setupHero {
+                self.present(detailViewController, animated: true)
+            }
+        } else {
+            detailViewController.setupHeroDB()
+            self.present(detailViewController, animated: true)
+        }
     }
 }
 
