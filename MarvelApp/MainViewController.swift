@@ -12,20 +12,14 @@ final class MainViewController: UIViewController {
     private let textLable: UILabel = {
         let textMarvel = UILabel()
         textMarvel.text = "Choose your hero"
+        textMarvel.textAlignment = .center
         textMarvel.textColor = .white
         textMarvel.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
         return textMarvel
     }()
-    private let themeButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Switch Theme", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.alpha = 0
-        return button
-    }()
     private let figure = TriangleView()
+    private var layout = AnimatedCollectionViewLayout()
     private lazy var galleryCollectionView: UICollectionView = {
-        let layout = AnimatedCollectionViewLayout()
         layout.animator = LinearCardAttributesAnimator(minAlpha: 0.5, itemSpacing: 0.3, scaleRate: 0.8)
         layout.minimumLineSpacing = Layout.galleryMinimumLineSpacing
         layout.scrollDirection = .horizontal
@@ -47,7 +41,6 @@ final class MainViewController: UIViewController {
                                                 for: .valueChanged)
         return collectionView
     }()
-    private var horisontalGallaryConstraint: Constraint?
     private let activityView: UIView = {
         let view = UIView()
         let activityIndicator = UIActivityIndicatorView()
@@ -72,12 +65,16 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         figure.backgroundColor = .red
         figure.color = UIColor(named: "backgroundColor")
+        setupSubviews()
         setupFigureLayout()
-        setupLogoLayout()
-        setupLabelLayout()
-        setupGalleryLayout()
+        setupLayouts()
         setupActivityLayout()
         loadHeroes()
+    }
+    override func viewWillTransition(to size: CGSize,
+                                     with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        setupLayouts()
     }
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
@@ -103,54 +100,78 @@ final class MainViewController: UIViewController {
             }
         }
     }
-    private func setupActivityLayout() {
-        view.addSubview(activityView)
-        activityView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        activityView.alpha = 0
-    }
     private func showSpinner() {
         UIView.animate(withDuration: 0.5) {
             self.activityView.alpha = 1
         }
     }
     private func removeSpinner() {
-        horisontalGallaryConstraint?.update(inset: 0)
         UIView.animate(withDuration: 0.5) {
             self.activityView.alpha = 0
             self.view.layoutIfNeeded()
         }
     }
-
-    private func setupFigureLayout() {
+    private func setupSubviews() {
         view.addSubview(figure)
+        view.addSubview(logoView)
+        view.addSubview(textLable)
+        view.addSubview(galleryCollectionView)
+        view.addSubview(activityView)
+    }
+    private func setupActivityLayout() {
+        activityView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        activityView.alpha = 0
+    }
+    private func setupFigureLayout() {
         figure.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-    private func setupLogoLayout() {
-        view.addSubview(logoView)
-        logoView.snp.makeConstraints { make in
+    private func setupLayouts() {
+        if UIDevice.current.orientation.isLandscape {
+            setupLandscapeLayout()
+        }
+        if UIDevice.current.orientation.isPortrait {
+            setupPortraitLayout()
+        }
+    }
+    private func setupPortraitLayout() {
+        layout.scrollDirection = .horizontal
+        galleryCollectionView.setCollectionViewLayout(layout, animated: true)
+        logoView.snp.remakeConstraints { make in
             make.top.equalToSuperview().inset(Layout.verticalInset)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
             make.height.equalTo(50)
         }
-    }
-    private func setupLabelLayout() {
-        view.addSubview(textLable)
-        textLable.snp.makeConstraints { make in
+        textLable.snp.remakeConstraints { make in
             make.top.equalTo(logoView.snp.top).inset(Layout.verticalInset)
             make.left.right.equalToSuperview().inset(Layout.horizontalTextInset)
+            make.centerX.equalTo(logoView.snp.centerX)
+        }
+        galleryCollectionView.snp.remakeConstraints { make in
+            make.top.equalTo(textLable.snp.bottom).inset(10)
+//            self.horisontalGallaryConstraint = make.left.equalToSuperview().inset(500).constraint
+            make.left.right.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
-    private func setupGalleryLayout() {
-        view.addSubview(galleryCollectionView)
-        galleryCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(textLable.snp.bottom).inset(10)
-            self.horisontalGallaryConstraint = make.left.equalToSuperview().inset(500).constraint
-            make.right.equalToSuperview()
-            make.bottom.equalToSuperview()
+    private func setupLandscapeLayout() {
+        layout.scrollDirection = .vertical
+        galleryCollectionView.setCollectionViewLayout(layout, animated: true)
+        logoView.snp.remakeConstraints { make in
+            make.top.equalToSuperview().inset(Layout.horizontalInset*2)
+            make.left.equalToSuperview()
+            make.right.equalTo(view.snp.centerX)
+        }
+        textLable.snp.remakeConstraints { make in
+            make.top.equalTo(logoView.snp.bottom).offset(30)
+            make.centerX.equalTo(logoView.snp.centerX)
+        }
+        galleryCollectionView.snp.remakeConstraints { make in
+            make.top.bottom.right.equalToSuperview()
+            make.left.equalTo(view.snp.centerX)
         }
     }
 }
@@ -267,8 +288,19 @@ extension MainViewController {
         static var leftDistanceToView: CGFloat { 0 }
         static var rightDistanceToView: CGFloat { 0 }
         static var galleryMinimumLineSpacing: CGFloat { 0 }
-        static let galleryItemWidth = (UIScreen.main.bounds.width - Layout.leftDistanceToView -
-                                       Layout.rightDistanceToView - (Layout.galleryMinimumLineSpacing / 2))
-        static let galleryItemHeight = UIScreen.main.bounds.height - 150
+        static var galleryItemWidth: CGFloat {
+            if UIDevice.current.orientation.isLandscape {
+                return UIScreen.main.bounds.width / 2
+            } else {
+                return UIScreen.main.bounds.width
+            }
+        }
+        static var galleryItemHeight: CGFloat {
+            if UIDevice.current.orientation.isLandscape {
+                return UIScreen.main.bounds.height
+            } else {
+                return UIScreen.main.bounds.height - 150
+            }
+        }
     }
 }

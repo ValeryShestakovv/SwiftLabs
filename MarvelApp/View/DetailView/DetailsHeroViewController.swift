@@ -31,7 +31,7 @@ final class DetailsHeroViewController: UIViewController {
         return textView
     }()
     private var topNameLableConstraint: Constraint?
-    private let effect = UIVisualEffectView()
+    private let bloorView = UIVisualEffectView()
     var viewModel: DetailsHeroViewModal
 
     init(viewModel: DetailsHeroViewModal) {
@@ -44,7 +44,7 @@ final class DetailsHeroViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageLayout()
-        view.addSubview(effect)
+        setupBloorViewLayout()
         setupButtonLayout()
         setupNameLayout()
         setupDetailLayout()
@@ -52,11 +52,13 @@ final class DetailsHeroViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        topNameLableConstraint?.update(inset: 700)
+        nameLable.snp.remakeConstraints { make in
+            make.left.right.equalToSuperview().inset(40)
+            make.top.equalToSuperview().inset(100)
+        }
         UIView.animate(withDuration: 0.5) {
             self.backButton.alpha = 1
-            self.effect.frame = self.view.frame
-            self.effect.effect = UIBlurEffect(style: .dark)
+            self.bloorView.effect = UIBlurEffect(style: .dark)
             self.view.layoutIfNeeded()
         }
     }
@@ -79,10 +81,13 @@ final class DetailsHeroViewController: UIViewController {
     }
     @objc func onButtonTap() {
         self.dismiss(animated: true)
-        topNameLableConstraint?.update(inset: 40)
+        nameLable.snp.remakeConstraints { make in
+            make.left.right.equalToSuperview().inset(40)
+            make.bottom.equalToSuperview().inset(40)
+        }
         backButton.alpha = 0
         UIView.animate(withDuration: 0.5) {
-            self.effect.effect = nil
+            self.bloorView.effect = nil
             self.detailView.alpha = 0
             self.view.layoutIfNeeded()
         }
@@ -103,7 +108,7 @@ final class DetailsHeroViewController: UIViewController {
     private func setupNameLayout() {
         view.addSubview(nameLable)
         nameLable.snp.makeConstraints { make in
-            self.topNameLableConstraint = make.bottom.equalToSuperview().inset(40).constraint
+            make.bottom.equalToSuperview().inset(40)
             make.left.right.equalToSuperview().inset(40)
         }
     }
@@ -113,6 +118,12 @@ final class DetailsHeroViewController: UIViewController {
             make.top.equalTo(nameLable.snp.bottom).offset(40)
             make.left.right.equalToSuperview().inset(Layout.horizontalInset)
             make.bottom.equalToSuperview().inset(Layout.horizontalInset)
+        }
+    }
+    private func setupBloorViewLayout() {
+        view.addSubview(bloorView)
+        bloorView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
 }
