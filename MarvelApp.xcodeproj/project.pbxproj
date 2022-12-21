@@ -15,6 +15,7 @@
 		637CE13D28F2FB7A00CDD3B9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CE13C28F2FB7A00CDD3B9 /* MainViewController.swift */; };
 		637CE14228F2FB7D00CDD3B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 637CE14128F2FB7D00CDD3B9 /* Assets.xcassets */; };
 		637CE14528F2FB7D00CDD3B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 637CE14328F2FB7D00CDD3B9 /* LaunchScreen.storyboard */; };
+		638843D52950C9D400324DE3 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 638843D42950C9D300324DE3 /* Colors.xcassets */; };
 		63A1D74328F467AE00FA6696 /* GalleryCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1D74228F467AE00FA6696 /* GalleryCellView.swift */; };
 		63A1D74C28F56E6F00FA6696 /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1D74B28F56E6F00FA6696 /* TriangleView.swift */; };
 		63B7FD1828F457C700092C40 /* HeroModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B7FD1728F457C700092C40 /* HeroModel.swift */; };
@@ -62,6 +63,7 @@
 		637CE14628F2FB7D00CDD3B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		637CE14B28F2FB7D00CDD3B9 /* MarvelAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarvelAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		637CE15528F2FB7D00CDD3B9 /* MarvelAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarvelAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		638843D42950C9D300324DE3 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		63A1D74228F467AE00FA6696 /* GalleryCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCellView.swift; sourceTree = "<group>"; };
 		63A1D74B28F56E6F00FA6696 /* TriangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
 		63B7FD1728F457C700092C40 /* HeroModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroModel.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 		63F0B038293F637E00CC8FDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				638843D42950C9D300324DE3 /* Colors.xcassets */,
 				637CE14128F2FB7D00CDD3B9 /* Assets.xcassets */,
 				637CE14328F2FB7D00CDD3B9 /* LaunchScreen.storyboard */,
 			);
@@ -374,6 +377,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				638843D52950C9D400324DE3 /* Colors.xcassets in Resources */,
 				637CE14528F2FB7D00CDD3B9 /* LaunchScreen.storyboard in Resources */,
 				637CE14228F2FB7D00CDD3B9 /* Assets.xcassets in Resources */,
 			);

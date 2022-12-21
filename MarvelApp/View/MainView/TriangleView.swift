@@ -2,7 +2,7 @@ import UIKit
 
 final class TriangleView: UIView {
 
-    var color = UIColor.gray {
+    var color = UIColor(named: "backgroundLight") {
         didSet {
             self.setNeedsDisplay()
         }
@@ -15,7 +15,7 @@ final class TriangleView: UIView {
         context.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
         context.addLine(to: CGPoint(x: rect.maxX, y: (rect.maxY/2)))
         context.closePath()
-        context.setFillColor(red: 0.16, green: 0.15, blue: 0.17, alpha: 1)
+        context.setFillColor(color?.cgColor ?? CGColor(gray: 1, alpha: 1))
         context.fillPath()
     }
 

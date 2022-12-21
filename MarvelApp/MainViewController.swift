@@ -16,6 +16,13 @@ final class MainViewController: UIViewController {
         textMarvel.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
         return textMarvel
     }()
+    private let themeButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Switch Theme", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.alpha = 0
+        return button
+    }()
     private let figure = TriangleView()
     private lazy var galleryCollectionView: UICollectionView = {
         let layout = AnimatedCollectionViewLayout()
@@ -64,6 +71,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         figure.backgroundColor = .red
+        figure.color = UIColor(named: "backgroundColor")
         setupFigureLayout()
         setupLogoLayout()
         setupLabelLayout()
