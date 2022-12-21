@@ -152,7 +152,6 @@ final class MainViewController: UIViewController {
         }
         galleryCollectionView.snp.remakeConstraints { make in
             make.top.equalTo(textLable.snp.bottom).inset(10)
-//            self.horisontalGallaryConstraint = make.left.equalToSuperview().inset(500).constraint
             make.left.right.equalToSuperview()
             make.bottom.equalToSuperview()
         }
@@ -161,7 +160,7 @@ final class MainViewController: UIViewController {
         layout.scrollDirection = .vertical
         galleryCollectionView.setCollectionViewLayout(layout, animated: true)
         logoView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().inset(Layout.horizontalInset*2)
+            make.top.equalToSuperview().inset(Layout.horizontalInset * 1.8)
             make.left.equalToSuperview()
             make.right.equalTo(view.snp.centerX)
         }
