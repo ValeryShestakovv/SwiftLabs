@@ -2,7 +2,7 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-final class DetailsHeroViewController: UIViewController {
+final class DetailsHeroView: UIViewController {
     private let backButton: UIButton = {
         let button = UIButton()
         button.setTitle("Back", for: .normal)
@@ -63,14 +63,19 @@ final class DetailsHeroViewController: UIViewController {
         }
     }
     func setupHero(complition: @escaping() -> Void) {
-        viewModel.downloadDetails { [weak self] result in
-            guard let self = self else {return}
-            self.nameLable.text = result.name
-            self.detailView.text = result.details
-            guard let imageURL = URL(string: result.imageStr) else {return}
-            let resource = ImageResource(downloadURL: imageURL)
-            self.imageView.kf.setImage(with: resource, placeholder: UIImage(named: "placeholder")) { _ in
-                complition()
+        viewModel.downloadDetails { [weak self] value in
+            switch value {
+            case .success(let value):
+                guard let self = self else {return}
+                self.nameLable.text = value.name
+                self.detailView.text = value.details
+                guard let imageURL = URL(string: value.imageStr) else {return}
+                let resource = ImageResource(downloadURL: imageURL)
+                self.imageView.kf.setImage(with: resource, placeholder: UIImage(named: "placeholder")) { _ in
+                    complition()
+                }
+            case .failure(let error):
+                print(error)
             }
         }
     }
@@ -130,7 +135,7 @@ final class DetailsHeroViewController: UIViewController {
 
 // MARK: Layout Guides
 
-extension DetailsHeroViewController {
+extension DetailsHeroView {
     enum Layout {
         static var horizontalInset: CGFloat { 50 }
         static var verticalInset: CGFloat { 100 }

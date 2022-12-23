@@ -45,7 +45,6 @@ final class GalleryCellView: UICollectionViewCell {
         setupImageLayout()
         setupNameLayout()
         setupActivityLayout()
-        showSpinner()
     }
     private func setupActivityLayout() {
         addSubview(activityView)
@@ -68,6 +67,7 @@ final class GalleryCellView: UICollectionViewCell {
         nameLabel.text = hero.name
         guard let imageURL = URL(string: hero.imageStr) else {return}
         let resource = ImageResource(downloadURL: imageURL)
+        showSpinner()
         imageView.kf.setImage(with: resource, placeholder: UIImage(named: "placeholder")) { _ in
             self.removeSpinner()
             guard let image = self.imageView.image else {return}

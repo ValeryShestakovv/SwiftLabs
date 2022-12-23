@@ -3,7 +3,12 @@ import Alamofire
 import AlamofireImage
 import UIKit
 
-final class ServiceImp: ServiceProtocol {
+protocol HeroService: AnyObject {
+    func getDetailsHero(idHero: Int, completion: @escaping (Result<HeroModel, Error>) -> Void)
+    func getListHeroes(offset: Int, limit: Int, completion: @escaping ([HeroModel], Int) -> Void)
+}
+
+final class HeroServiceImpl: HeroService {
     private let baseUrl = "https://gateway.marvel.com/v1/public/"
     private let privateKey = "94b698d025f8a1363b1e43cb1f2982c64d3d56af"
     private let publicKey = "a6b4166234aa5492bf43f028bcbb94d1"
@@ -22,7 +27,7 @@ final class ServiceImp: ServiceProtocol {
         ]
         return parameters
     }
-    func getDetailsHero(idHero: Int, completion: @escaping (HeroModel) -> Void) {
+    func getDetailsHero(idHero: Int, completion: @escaping (Result<HeroModel, Error>) -> Void) {
         AF.request(endpoint(path: "characters/" + String(idHero)),
                    method: .get,
                    parameters: getParams(offset: 0, limit: 1),
@@ -31,13 +36,14 @@ final class ServiceImp: ServiceProtocol {
             switch response.result {
             case .success(let value):
                 guard let heroPayload = value.data?.results?[0] else {
-                    completion(.stub)
+                    completion(.success(.stub))
                     return
                 }
                 let heroModel = HeroModel(dtoHero: heroPayload)
-                completion(heroModel)
+                completion(.success(heroModel))
             case .failure(let error):
                 print("Error while request details hero: \(error)")
+                completion(.failure(error))
             }
         }
     }
@@ -64,6 +70,7 @@ final class ServiceImp: ServiceProtocol {
                 completion(heroIdList, totalHeroes)
             case .failure(let error):
                 print("Error while request list heroes: \(error)")
+                completion([], 0)
             }
         }
     }

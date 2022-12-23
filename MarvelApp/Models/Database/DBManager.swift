@@ -2,8 +2,14 @@ import Foundation
 import Realm
 import RealmSwift
 
-public class DBManager {
-    static func realm() -> Realm? {
+protocol DBManager: AnyObject {
+    func addHeroDB(hero: HeroModel)
+    func getAllHeroes() -> [HeroModel]
+}
+
+final class DBManagerImpl: DBManager {
+    private let realm: Realm?
+    init() {
         do {
             let config = Realm.Configuration(
               schemaVersion: 0,
@@ -11,13 +17,13 @@ public class DBManager {
             )
             Realm.Configuration.defaultConfiguration = config
             let realm = try Realm()
-            return realm
+            self.realm = realm
         } catch let error {
             print("Could not access database: ", error)
-            return nil
+            self.realm = nil
         }
     }
-    static func addObjectDB<T: RealmSwiftObject>(realm: Realm?, hero: T) {
+    func addObjectDB<T: RealmSwiftObject>(hero: T) {
         do {
             try realm?.write {
                 realm?.add(hero, update: .modified)
@@ -26,10 +32,10 @@ public class DBManager {
             print(error)
         }
     }
-    static func getAllObjects<T: RealmSwiftObject>(realm: Realm) -> Results<T> {
-        return realm.objects(T.self)
+    func getAllObjects<T: RealmSwiftObject>() -> Results<T> {
+        return realm!.objects(T.self)
     }
-    static func addHeroDB(realm: Realm?, hero: HeroModel) {
+    func addHeroDB(hero: HeroModel) {
         do {
             let heroDB = HeroModelDB(dtoHeroModel: hero)
             try realm?.write {
@@ -39,10 +45,10 @@ public class DBManager {
             print(error)
         }
     }
-    static func getAllHeroes(realm: Realm) -> [HeroModel] {
-        let objects = realm.objects(HeroModelDB.self)
+    func getAllHeroes() -> [HeroModel] {
+        let objects = realm?.objects(HeroModelDB.self)
         var listHero: [HeroModel] = []
-        objects.forEach { heroDB in
+        objects?.forEach { heroDB in
             let hero = HeroModel(dtoHeroModelDB: heroDB)
             listHero.append(hero)
         }

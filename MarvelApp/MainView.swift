@@ -2,7 +2,7 @@ import SnapKit
 import UIKit
 import AnimatedCollectionViewLayout
 
-final class MainViewController: UIViewController {
+final class MainView: UIViewController {
     private let logoView: UIImageView = {
         let logo = UIImageView()
         logo.image = UIImage(named: "logo")
@@ -160,7 +160,7 @@ final class MainViewController: UIViewController {
         layout.scrollDirection = .vertical
         galleryCollectionView.setCollectionViewLayout(layout, animated: true)
         logoView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().inset(Layout.horizontalInset * 1.8)
+            make.top.equalToSuperview().inset(Layout.horizontalInset * 1.7)
             make.left.equalToSuperview()
             make.right.equalTo(view.snp.centerX)
         }
@@ -175,7 +175,7 @@ final class MainViewController: UIViewController {
     }
 }
 
-extension MainViewController: UICollectionViewDelegateFlowLayout {
+extension MainView: UICollectionViewDelegateFlowLayout {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView is UICollectionView else {
             return
@@ -199,7 +199,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension MainViewController: UICollectionViewDataSource {
+extension MainView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.viewModel.numberOfHeroes()
     }
@@ -233,21 +233,21 @@ extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let currentHero = viewModel.getCurrentHeroModal(index: indexPath.row)
         let detailViewModel = DetailsHeroViewModal(hero: currentHero)
-        let detailViewController = DetailsHeroViewController(viewModel: detailViewModel)
-        detailViewController.transitioningDelegate = self
-        detailViewController.modalPresentationStyle = .custom
+        let detailView = DetailsHeroView(viewModel: detailViewModel)
+        detailView.transitioningDelegate = self
+        detailView.modalPresentationStyle = .custom
         if viewModel.connectedToNetwork == true {
-            detailViewController.setupHero {
-                self.present(detailViewController, animated: true)
+            detailView.setupHero {
+                self.present(detailView, animated: true)
             }
         } else {
-            detailViewController.setupHeroDB()
-            self.present(detailViewController, animated: true)
+            detailView.setupHeroDB()
+            self.present(detailView, animated: true)
         }
     }
 }
 
-extension MainViewController: UIViewControllerTransitioningDelegate {
+extension MainView: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -279,7 +279,7 @@ extension MainViewController: UIViewControllerTransitioningDelegate {
 
 // MARK: Layout Guides
 
-extension MainViewController {
+extension MainView {
     enum Layout {
         static var horizontalTextInset: CGFloat { 85 }
         static var horizontalInset: CGFloat { 90 }

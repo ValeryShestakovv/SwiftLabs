@@ -4,8 +4,8 @@ import RealmSwift
 final class MainViewModel {
     private var listHeroes: [HeroModel] = []
     private var totalHeroes: Int?
-    private let service = ServiceImp()
-    let database = DBManager.realm()
+    private let service = HeroServiceImpl()
+    private let database = DBManagerImpl()
     var connectedToNetwork: Bool {
         if TestInternetConnection.connectedToNetwork() == true {
             return true
@@ -22,7 +22,7 @@ final class MainViewModel {
                 complition()
             }
         } else {
-            self.listHeroes = DBManager.getAllHeroes(realm: database!)
+            self.listHeroes = database.getAllHeroes()
             complition()
         }
     }
@@ -43,7 +43,7 @@ final class MainViewModel {
                 complition()
             }
         } else {
-            self.listHeroes = DBManager.getAllHeroes(realm: database!)
+            self.listHeroes = database.getAllHeroes()
             complition()
         }
     }
@@ -54,6 +54,6 @@ final class MainViewModel {
         return listHeroes[index]
     }
     func addHeroToDB(hero: HeroModel) {
-        DBManager.addHeroDB(realm: self.database, hero: hero)
+        database.addHeroDB(hero: hero)
     }
 }
