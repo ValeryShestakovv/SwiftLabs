@@ -1,7 +1,7 @@
 # MarvelApp
 
 ## Why i created this app
-This is my study project. I've been practicing the basic concepts for android development on it
+This is my first project on the IOS platform. On it, I learned the basics of mobile development as part of my internship at Effective.
 
 ## Topics
 * Navigation
