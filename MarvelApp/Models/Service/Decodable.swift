@@ -1,10 +1,3 @@
-//
-//  Decodable.swift
-//  MarvelApp
-//
-//  Created by Jarvis on 06.12.2022.
-//
-
 import Foundation
 
 struct HeroListUpruvPayload: Decodable {

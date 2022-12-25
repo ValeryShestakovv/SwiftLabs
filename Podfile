@@ -10,6 +10,5 @@ target 'MarvelApp' do
   pod 'SwiftLint'
   pod 'Alamofire'
   pod 'RealmSwift', '~>10'
-  pod 'AlamofireImage', '~> 4.1'
   pod 'Kingfisher', '~> 7.0'
 end
