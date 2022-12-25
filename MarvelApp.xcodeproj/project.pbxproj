@@ -18,12 +18,13 @@
 		638843D52950C9D400324DE3 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 638843D42950C9D300324DE3 /* Colors.xcassets */; };
 		638843E0295865CA00324DE3 /* String + Localize .swift in Sources */ = {isa = PBXBuildFile; fileRef = 638843DF295865CA00324DE3 /* String + Localize .swift */; };
 		638843E32958668A00324DE3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 638843E52958668A00324DE3 /* Localizable.strings */; };
+		638844042958787100324DE3 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 638844032958787100324DE3 /* loading.gif */; };
 		63A1D74328F467AE00FA6696 /* GalleryCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1D74228F467AE00FA6696 /* GalleryCellView.swift */; };
 		63A1D74C28F56E6F00FA6696 /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1D74B28F56E6F00FA6696 /* TriangleView.swift */; };
 		63B7FD1828F457C700092C40 /* HeroModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B7FD1728F457C700092C40 /* HeroModel.swift */; };
 		63C1E331290A942200F4AAF4 /* DetailsHeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C1E330290A942200F4AAF4 /* DetailsHeroView.swift */; };
 		63D7D073290FCE2000FE0888 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D072290FCE2000FE0888 /* AnimationController.swift */; };
-		63D7D07A29113DA600FE0888 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D07929113DA600FE0888 /* Service.swift */; };
+		63D7D07A29113DA600FE0888 /* HeroService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D07929113DA600FE0888 /* HeroService.swift */; };
 		63D7D0832911A34600FE0888 /* Date + Timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D0822911A34600FE0888 /* Date + Timestamp.swift */; };
 		63D7D0872911A37700FE0888 /* String + MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D0862911A37700FE0888 /* String + MD5.swift */; };
 		63D7D08A2911A3A100FE0888 /* UIImage + Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7D0892911A3A100FE0888 /* UIImage + Color.swift */; };
@@ -76,13 +77,13 @@
 		638843FF29586D1000324DE3 /* main_screen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = main_screen.gif; sourceTree = "<group>"; };
 		6388440029586D1100324DE3 /* description_screen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = description_screen.gif; sourceTree = "<group>"; };
 		6388440129586D1100324DE3 /* localize_eng.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = localize_eng.png; sourceTree = "<group>"; };
-		6388440229586D1100324DE3 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
+		638844032958787100324DE3 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = loading.gif; path = ../../../../../loading.gif; sourceTree = "<group>"; };
 		63A1D74228F467AE00FA6696 /* GalleryCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCellView.swift; sourceTree = "<group>"; };
 		63A1D74B28F56E6F00FA6696 /* TriangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
 		63B7FD1728F457C700092C40 /* HeroModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroModel.swift; sourceTree = "<group>"; };
 		63C1E330290A942200F4AAF4 /* DetailsHeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsHeroView.swift; sourceTree = "<group>"; };
 		63D7D072290FCE2000FE0888 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
-		63D7D07929113DA600FE0888 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		63D7D07929113DA600FE0888 /* HeroService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroService.swift; sourceTree = "<group>"; };
 		63D7D0822911A34600FE0888 /* Date + Timestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Timestamp.swift"; sourceTree = "<group>"; };
 		63D7D0862911A37700FE0888 /* String + MD5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + MD5.swift"; sourceTree = "<group>"; };
 		63D7D0892911A3A100FE0888 /* UIImage + Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage + Color.swift"; sourceTree = "<group>"; };
@@ -166,8 +167,8 @@
 				6388440029586D1100324DE3 /* description_screen.gif */,
 				638843FF29586D1000324DE3 /* main_screen.gif */,
 				638843FB29586D1000324DE3 /* landscape.png */,
+				638844032958787100324DE3 /* loading.gif */,
 				638843FD29586D1000324DE3 /* light.png */,
-				6388440229586D1100324DE3 /* loading.gif */,
 				6388440129586D1100324DE3 /* localize_eng.png */,
 				638843FC29586D1000324DE3 /* localize_ru.png */,
 				638843FA29586CE100324DE3 /* portrait.png */,
@@ -179,7 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				63F0B03B293F643800CC8FDF /* Decodable.swift */,
-				63D7D07929113DA600FE0888 /* Service.swift */,
+				63D7D07929113DA600FE0888 /* HeroService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -386,6 +387,7 @@
 			files = (
 				638843D52950C9D400324DE3 /* Colors.xcassets in Resources */,
 				638843E32958668A00324DE3 /* Localizable.strings in Resources */,
+				638844042958787100324DE3 /* loading.gif in Resources */,
 				637CE14528F2FB7D00CDD3B9 /* LaunchScreen.storyboard in Resources */,
 				637CE14228F2FB7D00CDD3B9 /* Assets.xcassets in Resources */,
 			);
@@ -479,7 +481,7 @@
 				637CE13D28F2FB7A00CDD3B9 /* MainView.swift in Sources */,
 				63A1D74328F467AE00FA6696 /* GalleryCellView.swift in Sources */,
 				63B7FD1828F457C700092C40 /* HeroModel.swift in Sources */,
-				63D7D07A29113DA600FE0888 /* Service.swift in Sources */,
+				63D7D07A29113DA600FE0888 /* HeroService.swift in Sources */,
 				63D7D0832911A34600FE0888 /* Date + Timestamp.swift in Sources */,
 				63D7D08A2911A3A100FE0888 /* UIImage + Color.swift in Sources */,
 				63F0B041293F650100CC8FDF /* MainViewModal.swift in Sources */,
