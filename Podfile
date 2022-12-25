@@ -8,8 +8,7 @@ target 'MarvelApp' do
   pod 'SnapKit', '~> 5.6.0'
   pod 'AnimatedCollectionViewLayout', '~> 1.1.0'
   pod 'SwiftLint'
-  pod 'Kingfisher', '~> 7.0'
   pod 'Alamofire'
   pod 'RealmSwift', '~>10'
-  pod 'lottie-ios'
+  pod 'Kingfisher', '~> 7.0'
 end

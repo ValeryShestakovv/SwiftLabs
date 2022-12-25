@@ -1,8 +1,9 @@
 PODS:
   - Alamofire (5.6.2)
+  - AlamofireImage (4.2.0):
+    - Alamofire (~> 5.4)
   - AnimatedCollectionViewLayout (1.1.0)
   - Kingfisher (7.4.1)
-  - lottie-ios (3.5.0)
   - Realm (10.32.2):
     - Realm/Headers (= 10.32.2)
   - Realm/Headers (10.32.2)
@@ -13,9 +14,9 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - AlamofireImage (~> 4.1)
   - AnimatedCollectionViewLayout (~> 1.1.0)
   - Kingfisher (~> 7.0)
-  - lottie-ios
   - RealmSwift (~> 10)
   - SnapKit (~> 5.6.0)
   - SwiftLint
@@ -23,9 +24,9 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
+    - AlamofireImage
     - AnimatedCollectionViewLayout
     - Kingfisher
-    - lottie-ios
     - Realm
     - RealmSwift
     - SnapKit
@@ -33,14 +34,14 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
+  AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
   AnimatedCollectionViewLayout: 0c1a38c4be115c525c887be183fc91ef65737c5d
   Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
-  lottie-ios: c55158d67d0629a260625cc2ded2052b829e3c3e
   Realm: a11d133606e898ee43ddd3c24050a382c8d3eab1
   RealmSwift: f796f7701a5efa031554d5639ef5b2d4c850bc74
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   SwiftLint: 32ee33ded0636d0905ef6911b2b67bbaeeedafa5
 
-PODFILE CHECKSUM: e61003e70a76496fbdbf06d53e388b5349f466ae
+PODFILE CHECKSUM: 5f16ebae18a8e3ed95571419b4143df8ec09b97a
 
 COCOAPODS: 1.11.3
