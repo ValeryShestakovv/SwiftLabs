@@ -11,7 +11,7 @@ final class MainView: UIViewController {
     }()
     private let textLable: UILabel = {
         let textMarvel = UILabel()
-        textMarvel.text = "Choose your hero"
+        textMarvel.text = "Choose your hero".localize()
         textMarvel.textAlignment = .center
         textMarvel.textColor = .white
         textMarvel.font = UIFont(name: "HelveticaNeue-Bold", size: 30)
@@ -238,10 +238,12 @@ extension MainView: UICollectionViewDataSource {
         detailView.modalPresentationStyle = .custom
         if viewModel.connectedToNetwork == true {
             detailView.setupHero {
+                guard self.presentedViewController == nil else {return}
                 self.present(detailView, animated: true)
             }
         } else {
             detailView.setupHeroDB()
+            guard self.presentedViewController == nil else {return}
             self.present(detailView, animated: true)
         }
     }
